@@ -373,15 +373,34 @@ export function EmptyStatePreview() {
 }
 
 /** Toast：三条通知依次从底部滑入叠起，停一会儿后依次退场 */
+/**
+ * Toast：和真的 Toaster 一致——停在右上，新的一条从上方落下、压在最上面，旧的往下让；
+ * 停一会儿后从最早的那条开始往右滑走，再从头来。减弱动效时停在三条都在的那一帧
+ */
+const TOASTS = [
+  { tone: 'success', icon: 'check', zh: '已保存修改', en: 'Changes saved' },
+  { tone: 'info', icon: 'link', zh: '链接已复制', en: 'Link copied' },
+  { tone: 'accent', icon: 'send', zh: '消息已发送', en: 'Message sent' },
+] as const;
 export function ToastPreview() {
+  const t = useT();
+  // 0 空 → 1 第一条 → 2 第二条 → 3 第三条（停留）→ 4 依次退场
+  const s = useStep([700, 1000, 1000, 1700, 800], 3);
   return (
     <div className="pv-toasts">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="pv-toast a" data-i={i}>
-          <span className="pv-toast__icon" data-tone={i} />
-          <span className="pv-toast__text"><i className="pv-bar" style={{ width: `${[70, 55, 62][i]}%` }} /><i className="pv-bar pv-bar--soft" style={{ width: `${[45, 60, 38][i]}%` }} /></span>
-        </div>
-      ))}
+      {TOASTS.map((it, i) => {
+        // 第 i 条在第 i+1 步出现；之后每来一条新的，它往下让一格
+        const shown = s >= i + 1;
+        const slot = shown ? Math.min(s, 3) - (i + 1) : 0;
+        const state = s === 4 ? 'leave' : shown ? 'in' : 'out';
+        return (
+          <div key={it.en} className="pv-toast" data-state={state} data-tone={it.tone} style={{ '--slot': slot, '--age': i } as CSSProperties}>
+            <span className="pv-toast__icon"><Icon name={it.icon} /></span>
+            <span className="pv-toast__title">{t(it.zh, it.en)}</span>
+            <Icon name="x" className="pv-toast__close" />
+          </div>
+        );
+      })}
     </div>
   );
 }

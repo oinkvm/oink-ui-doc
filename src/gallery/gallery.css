@@ -247,28 +247,35 @@
 .pv-bob { display: inline-grid; animation: pv-bob 3s var(--ok-ease-in-out) infinite; }
 @keyframes pv-bob { 0%, 100% { transform: none; } 50% { transform: translateY(-4px); } }
 
-/* Toast：三条依次滑入叠起，再依次退场 */
+/* Toast：和 Toaster 一样从上方落下、新的压在最上面（旧的往下让一格），退场往右滑走 */
 .pv-toasts { position: relative; width: min(100%, 236px); height: 100%; }
 .pv-toast {
-  --at: 2.6s; --th: 40px;
-  position: absolute; left: 0; right: 0; bottom: calc(var(--i, 0) * (var(--th) + 6px)); display: flex; align-items: center; gap: 10px; height: var(--th); padding: 0 12px;
+  --th: 40px;
+  position: absolute; left: 0; right: 0; top: calc(var(--slot, 0) * (var(--th) + 8px)); display: flex; align-items: center; gap: 9px;
+  height: var(--th); padding: 0 8px 0 7px; box-sizing: border-box;
   border-radius: calc(14px * var(--ok-rk)); corner-shape: var(--ok-corner);
-  background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi);
-  animation: pv-toast 4.2s var(--ok-ease-out) infinite;
+  background: var(--ok-pop); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi);
+  opacity: 0; transform: translateY(-24px) scale(.84); transition: none;
 }
-.pv-toast[data-i="0"] { --i: 0; --d: 0s; }
-.pv-toast[data-i="1"] { --i: 1; --d: .45s; }
-.pv-toast[data-i="2"] { --i: 2; --d: .9s; }
-.pv-toast__icon { flex: none; width: 16px; height: 16px; border-radius: 50%; background: var(--ok-success); }
-.pv-toast__icon[data-tone="1"] { background: var(--ok-info); }
-.pv-toast__icon[data-tone="2"] { background: var(--ok-accent); }
-.pv-toast__text { display: grid; gap: 6px; flex: 1; min-width: 0; }
-.pv-toast__text .pv-bar { height: 6px; }
-@keyframes pv-toast {
-  0% { opacity: 0; transform: translateY(24px) scale(.96); }
-  10%, 70% { opacity: 1; transform: none; }
-  78%, 100% { opacity: 0; transform: translateY(6px) scale(.96); }
+.pv-toast[data-state="in"] {
+  opacity: 1; transform: none;
+  transition: opacity var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy), top var(--ok-spring-dur) var(--ok-spring);
 }
+/* 退场：最早的那条先走 */
+.pv-toast[data-state="leave"] {
+  opacity: 0; transform: translateX(56px) scale(.92);
+  transition: opacity calc(170ms * var(--ok-ms)) var(--ok-ease-in), transform calc(170ms * var(--ok-ms)) var(--ok-ease-in);
+  transition-delay: calc(var(--age, 0) * 130ms * var(--ok-ms));
+}
+.pv-toast__icon {
+  --_c: var(--ok-accent-text); --_s: var(--ok-accent-soft);
+  display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%; corner-shape: round; background: var(--_s); color: var(--_c);
+}
+.pv-toast[data-tone="success"] .pv-toast__icon { --_c: var(--ok-success-text); --_s: var(--ok-success-soft); }
+.pv-toast[data-tone="info"] .pv-toast__icon { --_c: var(--ok-info-text); --_s: var(--ok-info-soft); }
+.pv-toast__icon .ok-icon { width: 14px; height: 14px; stroke-width: 2.2; }
+.pv-toast__title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 12.5px/1.2 var(--ok-font); color: var(--ok-text); }
+.pv-toast__close { flex: none; width: 14px; height: 14px; color: var(--ok-text-3); }
 
 /* ==========================================================================
    基础
