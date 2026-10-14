@@ -224,7 +224,7 @@ export default function GettingStarted() {
                 <li><Code>defaultAccent</Code>：五种预设强调色之一，或任意颜色（<Code>'#3fa7c4'</Code>），默认 <Code>'pink'</Code>。</li>
                 <li><Code>defaultMotion</Code>：<Code>'auto' | 'full' | 'reduced'</Code>，默认 <Code>'auto'</Code>（跟随系统的“减弱动态效果”）。</li>
                 <li><Code>storageKey</Code>：传了就把用户的选择记在 <Code>localStorage</Code> 的这个键下，刷新后恢复。</li>
-                <li><Code>locale</Code>：<Code>'zh-CN' | 'en-US'</Code>，默认 <Code>'zh-CN'</Code>。切换组件自带的文案：关闭、确认之类的按钮、aria-label、占位文字、日历的月份名等。</li>
+                <li><Code>locale</Code>：<Code>'auto' | 'zh-CN' | 'en-US'</Code>，默认 <Code>'auto'</Code>（跟随浏览器语言，中文用 zh-CN、其它用 en-US）。切换组件自带的文案：关闭、确认之类的按钮、aria-label、占位文字、日历的月份名等。服务端渲染的应用最好显式传入。</li>
               </ul>
               <p>不包 Provider 组件也能渲染（浅色加默认强调色），只是 <Code>useOink()</Code> 拿到的是只读的默认值，切换主题的方法不会生效。</p>
             </>,
@@ -234,7 +234,7 @@ export default function GettingStarted() {
                 <li><Code>defaultAccent</Code>: one of five preset accent colors, or any color (<Code>'#3fa7c4'</Code>); defaults to <Code>'pink'</Code>.</li>
                 <li><Code>defaultMotion</Code>: <Code>'auto' | 'full' | 'reduced'</Code>, defaults to <Code>'auto'</Code> (follow the OS “Reduce motion” setting).</li>
                 <li><Code>storageKey</Code>: when set, the user’s choices are saved under this <Code>localStorage</Code> key and restored on reload.</li>
-                <li><Code>locale</Code>: <Code>'zh-CN' | 'en-US'</Code>, defaults to <Code>'zh-CN'</Code>. Switches the components’ built-in strings: buttons such as Close and Confirm, aria-labels, placeholders, calendar month names and so on. For an English app, pass <Code>locale="en-US"</Code>.</li>
+                <li><Code>locale</Code>: <Code>'auto' | 'zh-CN' | 'en-US'</Code>, defaults to <Code>'auto'</Code> (follows the browser language: Chinese → zh-CN, anything else → en-US). Switches the components’ built-in strings: buttons such as Close and Confirm, aria-labels, placeholders, calendar month names and so on. Server-rendered apps should pass it explicitly.</li>
               </ul>
               <p>Components render without the Provider too (light theme with the default accent color), but <Code>useOink()</Code> then returns read-only defaults and the theme setters do nothing.</p>
             </>,

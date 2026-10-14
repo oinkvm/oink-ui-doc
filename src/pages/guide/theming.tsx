@@ -483,14 +483,14 @@ export default function Theming() {
             { name: 'defaultAccent', type: `AccentPreset | '#rrggbb'`, default: `'pink'`, description: t('初始强调色：五种预设之一，或任意颜色。', 'Initial accent color: one of the five presets, or any color.') },
             { name: 'defaultMotion', type: `'auto' | 'full' | 'reduced'`, default: `'auto'`, description: t('初始动效偏好。', 'Initial motion preference.') },
             { name: 'storageKey', type: 'string', description: t('传了就把三项选择记到 localStorage 的这个键下。', 'When set, the three choices are saved under this localStorage key.') },
-            { name: 'locale', type: `'zh-CN' | 'en-US'`, default: `'zh-CN'`, description: t('组件自带文案的语言：aria-label、关闭 / 确认之类的按钮、日历的月份名、占位文字等。', 'Language of the components’ built-in strings: aria-labels, buttons such as Close / Confirm, calendar month names, placeholders and so on.') },
+            { name: 'locale', type: `'auto' | 'zh-CN' | 'en-US'`, default: `'auto'`, description: t('组件自带文案的语言：aria-label、关闭 / 确认之类的按钮、日历的月份名、占位文字等。auto 跟随浏览器语言：中文用 zh-CN，其它用 en-US。', 'Language of the components’ built-in strings: aria-labels, buttons such as Close / Confirm, calendar month names, placeholders and so on. auto follows the browser language: Chinese → zh-CN, anything else → en-US.') },
             { name: 'tail', type: 'ReactNode | ((props: { className: string }) => ReactNode)', description: t('全局替换加载器和按钮加载状态里的尾巴图案，等于在最外层包一个 TailProvider。见下面“替换尾巴图案”。', 'Replaces the tail glyph in loaders and button loading states globally; the same as wrapping everything in a TailProvider. See “Replacing the tail glyph” below.') },
           ]}
         />
         <div className="g-prose">
           {t(
-            <p><Code>locale</Code> 只管库组件自带的文案，默认中文；做英文界面时传 <Code>locale="en-US"</Code>。你自己写的文案仍由应用的国际化方案负责。</p>,
-            <p><Code>locale</Code> only covers the library components’ built-in strings and defaults to Chinese; for an English interface, pass <Code>locale="en-US"</Code>. Your own copy is still handled by your app’s i18n setup.</p>,
+            <p><Code>locale</Code> 只管库组件自带的文案，默认 <Code>'auto'</Code>：跟随浏览器语言，中文用 zh-CN，其它语言都用 en-US。服务端渲染时服务端不知道访客的语言，第一帧和注水用 en-US、之后才换成浏览器的语言；这类应用最好按网址或 <Code>Accept-Language</Code> 显式传入（这个文档站就是按网址传的）。你自己写的文案仍由应用的国际化方案负责。</p>,
+            <p><Code>locale</Code> only covers the library components’ built-in strings and defaults to <Code>'auto'</Code>: it follows the browser language — Chinese → zh-CN, any other language → en-US. With server rendering the server can’t know the visitor’s language, so the first frame and hydration use en-US and switch to the browser’s language right after; such apps should pass it explicitly from the URL or <Code>Accept-Language</Code> (this docs site passes it from the URL). Your own copy is still handled by your app’s i18n setup.</p>,
           )}
         </div>
         <PropsTable

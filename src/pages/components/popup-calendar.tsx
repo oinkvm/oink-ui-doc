@@ -267,7 +267,7 @@ const TODAY = new Date(2026, 9, 13);
             { name: 'min / max', type: 'Date', description: t('可选的最早 / 最晚日期（含）。', 'Earliest / latest selectable date (inclusive).') },
             { name: 'isDateDisabled', type: '(date: Date) => boolean', description: t('返回 true 的日期不可选。', 'Days for which it returns true cannot be selected.') },
             { name: 'weekStartsOn', type: '0 | 1 | 2 | 3 | 4 | 5 | 6', default: '1', description: t('一周从星期几开始：0 = 周日，1 = 周一。', 'First day of the week: 0 = Sunday, 1 = Monday.') },
-            { name: 'locale', type: 'string', default: "'zh-CN'", description: t('月份标题、星期名和读屏文字的语言。', 'Language of the month title, weekday names and screen reader text. Follows the OinkProvider locale when omitted.') },
+            { name: 'locale', type: 'string', default: t('跟随 OinkProvider', 'from OinkProvider'), description: t('月份标题、星期名和读屏文字的语言。不传时跟随 OinkProvider 的 locale（默认按浏览器语言）。', 'Language of the month title, weekday names and screen reader text. Follows the OinkProvider locale when omitted (by default, the browser language).') },
             { name: 'today', type: 'Date', default: t('系统日期', 'System date'), description: t('“今天”是哪天。', 'Which day counts as “today”.') },
             { name: 'autoFocus', type: 'boolean', description: t('挂载时把焦点放到当前日期上。', 'Moves focus to the current day on mount.') },
             { name: 'disabled', type: 'boolean', description: t('整体禁用。', 'Disables the whole calendar.') },
