@@ -208,8 +208,8 @@ export default function GettingStarted() {
             <li><strong>Count / Progress / Reaction{t('：', ': ')}</strong><Code>roll</Code></li>
           </ul>
           {t(
-            <p>完整的对照表在包里 <Code>CONTRIBUTING.md</Code> 的“按需引入样式”一节；每个入口文件开头的注释也写着要先引入哪些入口。</p>,
-            <p>The full table is in the package’s <Code>CONTRIBUTING.md</Code>, in the section on importing styles per component; the comment at the top of each entry file also lists which entries to import first.</p>,
+            <p>完整的对照表在 oink-ui 仓库 <Code>AGENTS.md</Code> 的“Importing styles per component”一节；每个入口文件开头的注释也写着要先引入哪些入口。</p>,
+            <p>The full table is in <Code>AGENTS.md</Code> in the oink-ui repository, in the section “Importing styles per component”; the comment at the top of each entry file also lists which entries to import first.</p>,
           )}
         </div>
       </DocSection>
