@@ -1,0 +1,84 @@
+/* 首页：顶栏 + 分段标签 + 一块大面板。只用 --ok-* 令牌，不写阴影（内描边是发丝线） */
+
+.home { --home-pad: clamp(16px, 3vw, 32px); --home-max: 1440px; min-height: 100vh; min-height: 100dvh; }
+
+.home-header {
+  box-sizing: border-box; display: flex; align-items: center; gap: var(--ok-s-3);
+  max-width: var(--home-max); min-height: calc(var(--ok-h-lg) + 20px); margin: 0 auto;
+  padding: max(10px, env(safe-area-inset-top, 0px)) var(--home-pad) 10px;
+}
+.home-header > * { min-width: 0; }
+
+.home-main { box-sizing: border-box; max-width: var(--home-max); margin: 0 auto; padding: var(--ok-s-2) var(--home-pad) var(--ok-s-12); }
+
+/* —— 标签 + 强调色 —— */
+.home-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ok-s-3) var(--ok-s-4); margin-bottom: var(--ok-s-4); }
+.home-accents { gap: 8px; padding: 0 2px; }
+/* 顶部的展示切换用 Segmented：宽屏按内容宽，窄屏占满一行，放不下时它自己横向滚动 */
+.home-tabs { min-width: 0; max-width: 100%; }
+@media (max-width: 767.98px) { .home-tabs { flex-basis: 100%; } }
+
+/* —— 大面板：表面色 + 发丝线 + 顶部高光，没有阴影。内边距 = 面板圆角 − 卡片圆角 —— */
+.home-panel {
+  --_gap: 12px;
+  box-sizing: border-box; min-width: 0; padding: var(--_gap);
+  border-radius: calc((20px + var(--_gap)) * var(--ok-rk)); corner-shape: var(--ok-corner);   /* 同心：卡片 20 + 缝，整体乘 rk */
+  background: var(--ok-surface); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi);
+}
+.home-panel:focus-visible { outline: 2px solid var(--ok-accent); outline-offset: 2px; }
+@media (max-width: 519.98px) { .home-panel { --_gap: 8px; } }
+
+/* —— 组件小样：多列错落 —— */
+.home-grid { columns: 1; column-gap: var(--_gap); }
+.home-grid > * { break-inside: avoid; margin-bottom: var(--_gap); }
+.home-panel[data-kind="components"] { padding-bottom: 0; }
+@media (min-width: 640px) { .home-grid { columns: 2; } }
+@media (min-width: 1024px) { .home-grid { columns: 3; } }
+@media (min-width: 1400px) { .home-grid { columns: 4; } }
+
+.home-tile { min-width: 0; }
+.home-tile__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ok-s-2); min-height: 18px; margin-bottom: var(--ok-s-3); }
+.home-tile__title { margin: 0; font: 600 12px/1.4 var(--ok-font); letter-spacing: .02em; color: var(--ok-text-2); }
+.home-grow { flex: 1 1 auto; min-width: 0; }
+.home-num { font-variant-numeric: tabular-nums; }
+.home-scale { display: flex; justify-content: space-between; margin-top: var(--ok-s-2); font: 450 12px/1 var(--ok-font); color: var(--ok-text-2); font-variant-numeric: tabular-nums; }
+.home-sync { color: var(--ok-text-2); }
+
+.home-signup__icon {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-accent-tint); color: var(--ok-text);
+}
+
+.home-profile__avatar {
+  position: relative; width: fit-content; margin: -38px 0 var(--ok-s-2) 4px; padding: 3px;
+  border-radius: 50%; background: var(--ok-card); line-height: 0;
+}
+.home-profile__name { margin: 0; font: 650 17px/1.3 var(--ok-font-display); color: var(--ok-text); }
+.home-profile__handle { margin: 2px 0 0; }
+.home-profile__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ok-s-2); margin: 0; }
+.home-profile__stats div { display: flex; flex-direction: column-reverse; gap: 2px; }
+.home-profile__stats dt { font: 450 12px/1.3 var(--ok-font); color: var(--ok-text-2); }
+.home-profile__stats dd { margin: 0; font: 650 16px/1.2 var(--ok-font-display); font-variant-numeric: tabular-nums; }
+
+.home-price { font: 700 22px/1 var(--ok-font-display); font-variant-numeric: tabular-nums; }
+
+.home-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ok-s-2); }
+
+/* —— 嵌入的示例应用 —— */
+.home-embed { display: flex; flex-direction: column; gap: var(--ok-s-2); height: calc(760px - 2 * var(--_gap)); }
+@media (max-width: 767.98px) { .home-embed { height: calc(640px - 2 * var(--_gap)); } }
+.home-embed__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ok-s-2); min-height: var(--ok-h-sm); padding-left: var(--ok-s-2); }
+.home-embed__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 14px/1.3 var(--ok-font); }
+.home-embed__frame {
+  display: block; flex: 1 1 auto; width: 100%; min-height: 0; box-sizing: border-box;
+  border: 1px solid var(--ok-line); border-radius: calc(20px * var(--ok-rk)); corner-shape: var(--ok-corner);
+  background: var(--ok-bg);
+}
+
+.home-links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--ok-s-2); margin-top: var(--ok-s-8); }
+
+@media (max-width: 767.98px) { .home-header { gap: var(--ok-s-2); } .home-header .site-controls { gap: var(--ok-s-1); } }
+
+/* 收藏按钮：不做成“按下去”的开关样子——收藏后底色不变，心形用强调色填满并轻轻弹一下（纯图形，可以缩放） */
+.ok-btn.home-fav[aria-pressed="true"] { --_bg: transparent; --_bg-hover: var(--ok-fill); --_fg: var(--ok-accent); }
+.home-fav[aria-pressed="true"] .ok-icon { animation: ok-oink var(--ok-dur-6) var(--ok-ease-out); }

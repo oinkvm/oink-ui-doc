@@ -1,0 +1,4 @@
+# Cloudflare Pages 项目配置。部署：npm run deploy
+name = "oink-ui"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-05-01"

@@ -1,0 +1,156 @@
+/* 栖木文具：只写布局与插画。颜色全部来自 --ok-* 令牌，没有阴影。 */
+.shop {
+  --shop-top-h: 56px;
+  --shop-card-min: 156px;
+  min-height: 100dvh; background: var(--ok-bg); color: var(--ok-text);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+}
+.shop[data-dock] { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+@media (min-width: 768px) { .shop { --shop-top-h: 64px; --shop-card-min: 200px; } }
+@media (min-width: 1024px) { .shop { --shop-card-min: 210px; } }
+
+.shop-skip { position: absolute; z-index: 30; left: 12px; top: 10px; transform: translateY(-300%); text-decoration: none; }
+.shop-skip:focus-visible { transform: none; }
+
+/* —— 顶栏 —— */
+.shop-top {
+  z-index: 10; background: var(--ok-bg); border-bottom: 1px solid var(--ok-line);
+}
+.shop-top__row { height: var(--shop-top-h); }
+.shop-top__search { flex: 1 1 auto; min-width: 0; max-width: 440px; }
+.shop-top__mobile-search { padding-bottom: var(--ok-s-3); }
+.shop-brand {
+  display: inline-flex; align-items: center; gap: 10px; flex: none; min-height: 44px; margin: 0 0 0 -4px; padding: 4px 10px 4px 4px;
+  border: 0; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: none; color: var(--ok-text);
+  font: 700 18px/1 var(--ok-font-display); letter-spacing: .01em; cursor: pointer; touch-action: manipulation;
+}
+.shop-brand__mark { width: 28px; height: 28px; flex: none; }
+.shop-brand__mark .bg { fill: var(--ok-inverse); }
+.shop-brand__mark .fg { fill: none; stroke: var(--ok-on-inverse); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.shop-btn-count { margin-left: 8px; }
+.shop-cartbtn, .shop-dock__cart { position: relative; }
+.shop-dot { position: absolute; top: -3px; right: -3px; pointer-events: none; }
+
+.shop-main { padding-top: var(--ok-s-5); outline: none; }
+@media (min-width: 768px) { .shop-main { padding-top: var(--ok-s-8); } }
+
+/* —— 首页 —— */
+.shop-hero {
+  display: grid; gap: var(--ok-s-5); padding: var(--ok-s-5);
+  border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-surface);
+  box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi);
+}
+.shop-hero__text { max-width: 44ch; }
+.shop-hero__art { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ok-s-2); }
+.shop-hero__art .ok-aspect { border-radius: calc(var(--ok-r-4) - var(--ok-s-5) + var(--ok-s-3)); corner-shape: var(--ok-corner); }
+@media (min-width: 768px) {
+  .shop-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 360px); align-items: center; gap: var(--ok-s-8); padding: var(--ok-s-6); border-radius: var(--ok-r-5); }
+  .shop-hero__art { gap: var(--ok-s-3); }
+}
+
+.shop-cats { overflow-x: auto; margin: -4px; padding: 4px; scrollbar-width: none; }
+.shop-cats .ok-chips { flex-wrap: nowrap; width: max-content; }
+/* 标签固定 32px 高：触屏下加高，并把点按区域撑到 44px */
+[data-touch] .shop-cats .ok-chip { position: relative; height: 40px; padding: 0 16px; font-size: 14px; }
+[data-touch] .shop-cats .ok-chip::before { content: ""; position: absolute; inset: -2px 0; }
+
+.shop-browse { display: grid; gap: var(--ok-s-6); align-items: start; }
+@media (min-width: 1024px) { .shop-browse { grid-template-columns: 264px minmax(0, 1fr); gap: var(--ok-s-8); } }
+.shop-browse__main { min-width: 0; }
+/* 筛选卡片比视口高时在自己里面滚动 */
+.shop-browse__side { max-height: calc(100dvh - var(--shop-top-h) - var(--ok-s-8)); overflow-y: auto; border-radius: calc(20px * var(--ok-rk)); corner-shape: var(--ok-corner); }
+.shop-filter__switch { display: flex; flex-direction: row-reverse; align-items: center; justify-content: space-between; gap: var(--ok-s-3); width: 100%; min-height: 44px; }
+.shop-filter__switch .ok-switch__label { font: 600 15px/1.3 var(--ok-font); color: var(--ok-text); }
+.shop-filter__row { min-height: var(--ok-h-sm); }
+/* 色块本身 30px：把点按区域撑到 44px */
+.shop-swatches { gap: 10px; padding: 7px 0; }
+.shop-range { display: flex; }
+.shop-swatches .ok-swatch::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; }
+
+.shop-rate { gap: 4px; margin-left: -6px; }
+.shop-rate .ok-rating__star { position: relative; }
+.shop-rate .ok-rating__star::before { content: ""; position: absolute; inset: -2px; }
+
+.shop-grid { margin: 0; padding: 0; list-style: none; }
+.shop-grid > li { display: grid; min-width: 0; }
+
+/* —— 商品卡片 —— */
+.shop-card { --_p: var(--ok-s-3); display: flex; flex-direction: column; gap: var(--ok-s-3); height: 100%; }
+.shop-card__media { position: relative; }
+.shop-card__art, .shop-card .ok-aspect { border-radius: var(--ok-r-nested); corner-shape: var(--ok-corner); }   /* Card 往下传的同心圆角：(20 − 12) × rk */
+.shop-card__badge { position: absolute; left: 8px; top: 8px; }
+.shop-card__fav { position: absolute; right: 4px; bottom: 4px; }
+.shop-card[data-soldout] .shop-art svg { opacity: .5; }
+.shop-card__text { padding: 0 4px 4px; }
+.shop-card__name { margin: 0; font: 600 15px/1.4 var(--ok-font); overflow-wrap: anywhere; }
+.shop-card__meta { min-width: 0; }
+.shop-stars { display: inline-flex; flex: none; }
+/* 只读的装饰星星：不需要触屏点按尺寸 */
+.shop-stars .ok-rating { gap: 1px; }
+.shop-stars .ok-rating__star { width: 16px; height: 16px; }
+.shop-stars .ok-rating__star svg { width: 16px; height: 16px; }
+.shop-stars .ok-rating:not(.ok-rating--sm) .ok-rating__star, .shop-stars .ok-rating:not(.ok-rating--sm) .ok-rating__star svg { width: 20px; height: 20px; }
+.shop-price { display: inline-flex; align-items: baseline; gap: 8px; font-variant-numeric: tabular-nums; }
+.shop-price__now { font: 700 17px/1.3 var(--ok-font-display); color: var(--ok-text); }
+.shop-price__was { font: 450 13px/1.3 var(--ok-font); color: var(--ok-text-3); }
+.shop-price[data-size="lg"] .shop-price__now { font-size: 30px; letter-spacing: -.01em; }
+.shop-price[data-size="lg"] .shop-price__was { font-size: 15px; }
+
+/* —— 商品详情 —— */
+.shop-gallery__main { border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); }
+.shop-gallery__thumbs { display: flex; gap: var(--ok-s-2); }
+.shop-thumb {
+  position: relative; width: 64px; height: 64px; padding: 0; margin: 0; border: 0; overflow: hidden; background: none; cursor: pointer;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); touch-action: manipulation;
+  transition: transform var(--ok-spring-dur) var(--ok-spring);
+}
+.shop-thumb:active { transform: scale(.94); transition-duration: var(--ok-dur-1); }
+.shop-thumb::after { content: ""; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; border: 2px solid transparent; transition: border-color var(--ok-dur-2) var(--ok-ease-out); }
+.shop-thumb[aria-checked="true"]::after { border-color: var(--ok-inverse); }
+.shop-detail__add { flex: 1 1 auto; min-width: 0; }
+.shop-qty { flex: none; }
+.shop-prose p, .shop-reviews p { margin: 0; max-width: 64ch; }
+
+/* —— 底部停靠：手机标签栏与购买栏 —— */
+.ok-tabbar.shop-dock { left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 6px); }
+.shop-dock .ok-tabbar__list { background: var(--ok-pop); }
+.shop-dock .ok-tabbar__item { flex-direction: column; gap: 3px; padding: 0 2px; font-size: 11px; }
+.shop-dock .ok-tabbar__badge { position: absolute; top: 1px; left: calc(50% + 4px); }
+.shop-dock--buy {
+  position: fixed; z-index: 20; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+  display: flex; align-items: center; gap: var(--ok-s-1); padding: 4px;
+  border-radius: var(--ok-r-full); corner-shape: round; background: var(--ok-pop); box-shadow: inset 0 0 0 1px var(--ok-line-2);
+}
+.shop-dock--buy > .ok-btn { height: calc(var(--ok-h-lg) - 8px); }
+.shop-dock--buy > .ok-btn--block { flex: 1 1 0%; width: auto; min-width: 0; }
+
+/* —— 购物车与订单 —— */
+.shop-lines { display: grid; gap: var(--ok-s-4); margin: 0; padding: 0; list-style: none; }
+.shop-line { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: var(--ok-s-2) var(--ok-s-3); align-items: start; }
+.shop-line__art { width: 56px; height: 56px; overflow: hidden; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); }
+.shop-line__text { display: grid; gap: 2px; min-width: 0; }
+.shop-line__price { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.shop-line__edit { grid-column: 2 / -1; justify-content: space-between; }
+.shop-totals { display: grid; gap: var(--ok-s-2); width: 100%; margin: 0; font: 450 14px/1.4 var(--ok-font); font-variant-numeric: tabular-nums; }
+.shop-totals > div { display: flex; justify-content: space-between; gap: var(--ok-s-3); }
+.shop-totals dt { color: var(--ok-text-2); }
+.shop-totals dd { margin: 0; color: var(--ok-text); }
+.shop-totals__sum { padding-top: var(--ok-s-3); border-top: 1px solid var(--ok-line); font-weight: 700; font-size: 16px; }
+.shop-totals__sum dt { color: var(--ok-text); }
+.shop-cart__foot { display: grid; grid-template-columns: minmax(0, 1fr); justify-content: stretch; gap: var(--ok-s-4); border-top: 1px solid var(--ok-line); }
+.shop-cart__code > .ok-input { flex: 1 1 auto; min-width: 0; }
+.shop-cart__apply { flex: none; }
+
+/* —— 结算 —— */
+.shop-summary { position: static; }
+@media (min-width: 1024px) { .shop-summary { position: sticky; } }
+.shop-step-title { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ok-s-2); outline: none; }
+.shop-done__head { outline: none; }
+
+/* —— 分类 —— */
+.shop-cat__row { display: flex; align-items: center; gap: var(--ok-s-3); min-width: 0; }
+.shop-cat__art { display: block; flex: none; width: 56px; height: 56px; overflow: hidden; border-radius: calc(20px * var(--ok-rk) - var(--ok-s-4) + var(--ok-s-2)); corner-shape: var(--ok-corner); }
+.shop-cat__text { display: grid; gap: 2px; min-width: 0; }
+
+/* 底部栏左右对称居中；整页打开时站点的返回按钮挪到底部栏上方，不再让底部栏给它让位 */
+body:has(.shop-dock) .site-back { bottom: calc(max(12px, env(safe-area-inset-bottom, 0px)) + var(--shop-dock-h, 72px)); }

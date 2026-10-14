@@ -1,0 +1,163 @@
+/* ==========================================================================
+   邮箱示例：只做布局和排版微调。颜色、圆角、间距、动效全部取 --ok-* 令牌；没有阴影。
+   容器（侧栏、抽屉、写邮件、设置）都是库的悬浮卡片，这里不画面板。
+   ========================================================================== */
+
+/* —— 侧栏 —— */
+.mail-sidebar,
+.mail-sidebar .ok-shell__drawer-body { gap: var(--ok-s-4); }
+.mail-brand { display: flex; align-items: center; gap: var(--ok-s-3); min-width: 0; min-height: var(--ok-h-md); }
+.mail-brand__mark {
+  display: grid; place-items: center; flex: none; width: 36px; height: 36px;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-accent-soft); color: var(--ok-accent-text);
+}
+.mail-brand__name { min-width: 0; font: 700 17px/1.3 var(--ok-font-display); letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-nav { flex: none; }
+.mail-dot { display: block; width: 10px; height: 10px; border-radius: var(--ok-r-full); corner-shape: round; background: var(--ok-text-3); }
+.mail-dot[data-tone="info"] { background: var(--ok-info); }
+.mail-dot[data-tone="success"] { background: var(--ok-success); }
+.mail-dot[data-tone="warning"] { background: var(--ok-warning); }
+.mail-account { display: flex; align-items: center; gap: var(--ok-s-3); min-width: 0; margin-top: auto; }
+.mail-account__text { display: grid; flex: 1 1 auto; min-width: 0; }
+.mail-account__name { font: 600 14px/1.35 var(--ok-font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-account__mail { font: 450 12px/1.35 var(--ok-font); color: var(--ok-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* —— 主区：两张卡片（列表 / 阅读区），中间是 SplitPane 的分隔条 —— */
+.mail-main { overflow: hidden; }
+.mail-main > .mail-pane { height: 100%; }
+.mail-pane { box-sizing: border-box; display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden; }
+.mail-h { margin: 0; font: 700 var(--ok-fs-h3)/1.3 var(--ok-font-display); letter-spacing: -.01em; white-space: nowrap; }
+
+/* —— 列表 —— */
+.mail-list { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; min-height: 0; }
+.mail-list__head { display: grid; gap: var(--ok-s-3); flex: none; min-width: 0; padding: var(--ok-s-5) var(--ok-s-5) var(--ok-s-3); }
+.mail-list__title { display: flex; align-items: center; gap: var(--ok-s-2); min-width: 0; min-height: var(--ok-h-sm); }
+.mail-list__summary { min-width: 0; font: 450 13px/1.4 var(--ok-font); color: var(--ok-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-list__bar { display: flex; align-items: center; gap: var(--ok-s-3); min-width: 0; min-height: var(--ok-h-sm); }
+.mail-list__count { font: 600 14px/1.3 var(--ok-font); white-space: nowrap; }
+.mail-list__scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--ok-s-3) var(--ok-s-3); }
+
+.mail-rows { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.mail-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--ok-s-1);
+  padding: var(--ok-s-1) var(--ok-s-2); border-radius: var(--ok-r-3); corner-shape: var(--ok-corner);
+  transition: background-color var(--ok-dur-2) var(--ok-ease-out);
+}
+@media (hover: hover) { .mail-row:hover { background: var(--ok-hover); } }
+.mail-row[data-state="open"] { background: var(--ok-hover); }
+.mail-row[data-selected], .mail-row[data-open] { background: var(--ok-fill); }
+.mail-row__check { margin-top: 15px; }
+.mail-row__star { margin-top: var(--ok-s-1); color: var(--ok-text-3); }
+/* 星标按下时只把星星变成实心黄色，不要开关按钮按下态的那圈深色底 */
+.mail-row__star[aria-pressed="true"] { color: var(--ok-warning-text); --_bg: transparent; --_bg-hover: var(--ok-fill); }
+.mail-row__main {
+  display: flex; align-items: flex-start; gap: var(--ok-s-3); min-width: 0; margin: 0; padding: var(--ok-s-2) var(--ok-s-1); border: 0;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: none;
+  font: inherit; color: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
+}
+.mail-row__main.ok-focusable:focus-visible { outline-offset: -2px; }
+.mail-row__text { display: grid; gap: 2px; flex: 1 1 auto; min-width: 0; }
+.mail-row__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ok-s-2); min-width: 0; }
+.mail-row__from { display: flex; align-items: center; gap: 6px; min-width: 0; font: 500 14px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.mail-row__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-row__dot { flex: none; width: 8px; height: 8px; border-radius: var(--ok-r-full); corner-shape: round; background: var(--ok-accent); }
+.mail-row__n { flex: none; font: 500 12px/1.4 var(--ok-font); color: var(--ok-text-3); }
+.mail-row__time { flex: none; font: 450 12px/1.4 var(--ok-font); color: var(--ok-text-2); font-variant-numeric: tabular-nums; }
+.mail-row__subject { font: 450 14px/1.4 var(--ok-font); color: var(--ok-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-row__snippet { font: 450 13px/1.45 var(--ok-font); color: var(--ok-text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-row__meta { display: flex; flex-wrap: wrap; gap: var(--ok-s-1); margin-top: var(--ok-s-1); }
+/* 未读：加粗 + 圆点（读屏另有“未读”二字），不只靠颜色 */
+.mail-row[data-unread] .mail-row__from { font-weight: 700; color: var(--ok-text); }
+.mail-row[data-unread] .mail-row__subject { font-weight: 600; color: var(--ok-text); }
+.mail-row[data-unread] .mail-row__time { font-weight: 600; color: var(--ok-text); }
+/* 紧凑：少一行摘要之外，行距也收一点 */
+.mail-rows[data-density="compact"] .mail-row__main { padding-block: var(--ok-s-1); }
+.mail-rows[data-density="compact"] .mail-row__meta { display: none; }
+.mail-rows[data-density="compact"] .mail-row__check { margin-top: 11px; }
+.mail-rows[data-density="compact"] .mail-row__star { margin-top: 0; }
+
+/* —— 阅读区 —— */
+.mail-reader { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; min-height: 0; }
+.mail-reader--empty { align-items: center; justify-content: center; }
+.mail-reader__bar { display: flex; align-items: center; gap: var(--ok-s-2); flex: none; min-width: 0; padding: var(--ok-s-5) var(--ok-s-5) var(--ok-s-3); }
+.mail-reader__tools { flex: 1 1 auto; min-width: 0; }
+.mail-reader__scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--ok-s-2) var(--ok-s-6) var(--ok-s-6); }
+.mail-reader__header { display: grid; gap: var(--ok-s-3); margin-bottom: var(--ok-s-5); }
+.mail-reader__subject { margin: 0; font: 700 calc(var(--ok-fs-h3) + 2px)/1.3 var(--ok-font-display); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.mail-reader__tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ok-s-2); }
+.mail-reader__n { font: 450 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.mail-reader__foot { display: flex; flex-wrap: wrap; gap: var(--ok-s-2); margin-top: var(--ok-s-6); }
+
+.mail-msg { display: grid; gap: var(--ok-s-4); min-width: 0; }
+.mail-msg + .mail-msg { margin-top: var(--ok-s-6); padding-top: var(--ok-s-6); border-top: 1px solid var(--ok-line); }
+.mail-msg__head { display: flex; align-items: center; gap: var(--ok-s-3); flex: 1 1 auto; min-width: 0; }
+.mail-msg__who { display: grid; gap: 2px; flex: 1 1 auto; min-width: 0; }
+.mail-msg__from { display: flex; align-items: baseline; gap: var(--ok-s-2); min-width: 0; }
+.mail-msg__name { flex: none; font: 600 15px/1.35 var(--ok-font); color: var(--ok-text); }
+.mail-msg__email, .mail-msg__to { min-width: 0; font: 450 13px/1.4 var(--ok-font); color: var(--ok-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-msg__time { flex: none; font: 450 13px/1.4 var(--ok-font); color: var(--ok-text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mail-msg__content { display: grid; gap: var(--ok-s-4); min-width: 0; padding-top: var(--ok-s-2); }
+.mail-msg__meta { margin: 0; font: 450 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+/* 会话：折叠标题里放的是整条抬头，内容区对齐到头像右边 */
+.mail-thread { --_inset: var(--ok-s-2); margin-inline: calc(-1 * var(--ok-s-2)); }
+.mail-thread .ok-accordion__title { display: flex; flex: 1 1 auto; min-width: 0; }
+.mail-thread .ok-accordion__content { padding-bottom: var(--ok-s-5); }
+.mail-thread .ok-accordion__item[data-state="open"] .mail-msg__to { display: none; }
+
+.mail-body { max-width: 72ch; font: 450 15px/1.7 var(--ok-font); color: var(--ok-text); overflow-wrap: anywhere; }
+.mail-body > * { margin: 0; }
+.mail-body > * + * { margin-top: .9em; }
+.mail-body ul, .mail-body ol { padding-inline-start: 1.4em; }
+.mail-body li + li { margin-top: .3em; }
+.mail-body blockquote {
+  padding: var(--ok-s-3) var(--ok-s-4); border-radius: var(--ok-r-3); corner-shape: var(--ok-corner);
+  background: var(--ok-well); color: var(--ok-text-2); white-space: pre-line;
+}
+.mail-body blockquote p { margin: 0; }
+.mail-body blockquote footer { margin-top: var(--ok-s-1); font-size: 13px; }
+.mail-body blockquote cite { font-style: normal; }
+
+.mail-files { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: var(--ok-s-2); margin: 0; padding: 0; list-style: none; }
+.mail-file { display: flex; align-items: center; gap: var(--ok-s-3); min-width: 0; }
+.mail-file__icon {
+  display: grid; place-items: center; flex: none; width: 36px; height: 36px;
+  border-radius: var(--ok-r-1); corner-shape: var(--ok-corner); background: var(--ok-fill); color: var(--ok-text-2);
+}
+.mail-file__text { display: grid; flex: 1 1 auto; min-width: 0; }
+.mail-file__name { font: 600 14px/1.35 var(--ok-font); color: var(--ok-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mail-file__size { font: 450 12px/1.35 var(--ok-font); color: var(--ok-text-2); }
+
+/* —— 写邮件：Panel 停在右下角（悬浮卡片默认居中，这里只改对齐） —— */
+.ok-float__card.mail-compose--panel { justify-self: end; }
+.mail-compose__body { display: flex; flex-direction: column; gap: var(--ok-s-3); }
+.mail-compose__field { display: grid; grid-template-columns: 4em minmax(0, 1fr); align-items: center; gap: var(--ok-s-2); min-width: 0; }
+.mail-compose__label { font: 500 14px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.mail-compose__to { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.mail-compose__combo { flex: 1 1 140px; min-width: 0; }
+.mail-compose__error { display: flex; align-items: center; gap: 6px; margin: 0; padding-inline-start: calc(4em + var(--ok-s-2)); font: 500 13px/1.4 var(--ok-font); color: var(--ok-danger-text); }
+.mail-compose__text { flex: 1 1 auto; }
+.mail-compose__files { display: flex; flex-wrap: wrap; gap: 6px; }
+.mail-compose__foot { align-items: center; }
+
+/* —— 设置 —— */
+.mail-settings .ok-dialog__body { display: grid; gap: var(--ok-s-5); }
+.mail-settings__h { margin: 0 0 var(--ok-s-2); padding-inline: var(--ok-s-1); font: 600 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+
+/* —— 响应式 —— */
+/* 768–1023：侧栏是抽屉，列表贴着左下角，给外壳的“返回示例”按钮留出滚动余量 */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .mail-list__scroll { padding-bottom: calc(var(--ok-h-sm) + var(--ok-s-6)); }
+}
+/* < 768：单栏。底部标签栏坐在页脚里；站点的返回按钮浮在标签栏上方，不给它留行 */
+@media (max-width: 767.98px) {
+  .mail-tabs { align-items: flex-start; padding: 0; }
+  body:has(.mail-tabs) .site-back { bottom: calc(max(12px, env(safe-area-inset-bottom, 0px)) + 76px); }
+  .mail-tabs > .ok-tabbar { flex: 1 1 auto; }
+  /* 三项 + 写邮件按钮在 375 宽里很挤：按内容分配宽度、收一点左右内边距，带数字的“收件箱”才不会被截断 */
+  .mail-tabs .ok-tabbar__item { flex: 1 1 auto; padding-inline: var(--ok-s-2); }
+  .mail-list__head { padding: var(--ok-s-4) var(--ok-s-4) var(--ok-s-3); }
+  .mail-list__scroll { padding-inline: var(--ok-s-2); }
+  .mail-reader__bar { padding: var(--ok-s-4) var(--ok-s-4) var(--ok-s-2); }
+  .mail-reader__scroll { padding: var(--ok-s-2) var(--ok-s-4) calc(var(--ok-h-sm) + var(--ok-s-8)); }
+  .mail-msg__email { display: none; }
+}

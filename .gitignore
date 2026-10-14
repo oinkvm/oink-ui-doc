@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-server
+*.tsbuildinfo
+.wrangler
+.asset-archive
+.DS_Store
+.claude/

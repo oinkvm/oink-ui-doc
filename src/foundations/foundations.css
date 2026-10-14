@@ -1,0 +1,351 @@
+/* 设计基础几页（设计原则、色彩、字体、形状 · 间距 · 层级、动效）的可视化。
+   类名前缀 f-。只用 --ok-* 令牌；不写投影（描边一律是 inset 发丝线，和库一致）；
+   半透明只出现在演示“半透明用途”的地方；带文字的元素悬停不位移，纯图形可以动。 */
+
+/* ================================================================ 设计原则 */
+.f-pv {
+  position: relative; height: 112px; overflow: hidden; container-type: inline-size;
+  border-radius: var(--ok-r-nested, var(--ok-r-3)); corner-shape: var(--ok-corner); background: var(--ok-well);
+}
+.f-pv i { position: absolute; display: block; transition: transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy); }
+.f-pv--radius i { border: 2px solid var(--ok-line-2); }
+.f-pv--radius i:nth-child(1) { inset: 18px -40px -40px 22px; border-radius: calc(44px * var(--ok-rk)); corner-shape: var(--ok-corner); }
+.f-pv--radius i:nth-child(2) { inset: 34px -40px -40px 38px; border-radius: calc(28px * var(--ok-rk)); corner-shape: var(--ok-corner); transition-delay: calc(40ms * var(--ok-ms)); }
+.f-pv--radius i:nth-child(3) { inset: 50px -40px -40px 54px; border-radius: calc(12px * var(--ok-rk)); corner-shape: var(--ok-corner); border-color: var(--ok-accent); background: var(--ok-accent-tint); transition-delay: calc(80ms * var(--ok-ms)); }
+.f-pv--flat i:nth-child(1) { inset: 20px 24px -30px; border-radius: calc(26px * var(--ok-rk)); corner-shape: var(--ok-corner); background: var(--ok-surface); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-pv--flat i:nth-child(2) { inset: 34px 38px -30px; border-radius: calc(16px * var(--ok-rk)); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi); transition-delay: calc(40ms * var(--ok-ms)); }
+.f-pv--flat i:nth-child(3) { left: 50%; top: 52px; width: 76px; height: 30px; margin-left: -38px; border-radius: 30px; background: var(--ok-accent-fill); transition-delay: calc(80ms * var(--ok-ms)); }
+.f-pv--ink { display: flex; align-items: center; gap: 5px; padding: 0 18px; }
+.f-pv--ink i { position: static; height: 44px; border-radius: calc(12px * var(--ok-rk)); corner-shape: var(--ok-corner); transform-origin: 0 50%; }
+.f-pv--ink i:nth-child(1) { flex: 6; background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-pv--ink i:nth-child(2) { flex: 3; background: var(--ok-inverse); transition-delay: calc(40ms * var(--ok-ms)); }
+.f-pv--ink i:nth-child(3) { flex: 1; background: var(--ok-accent); transition-delay: calc(80ms * var(--ok-ms)); }
+.f-pv--motion i:nth-child(1) { left: 22px; right: 22px; top: 50%; height: 2px; margin-top: -1px; background: repeating-linear-gradient(90deg, var(--ok-line-2) 0 6px, transparent 6px 12px); }
+.f-pv--motion i:nth-child(2) { right: 22px; top: 50%; width: 30px; height: 30px; margin-top: -15px; border-radius: 50%; border: 2px dashed var(--ok-line-2); }
+.f-pv--motion i:nth-child(3) { left: 22px; top: 50%; width: 30px; height: 30px; margin-top: -15px; border-radius: 50%; background: var(--ok-accent); }
+/* 四条原则：一张卡片里四行，左图右文，行间一条发丝线；窄屏图在上 */
+.f-principles { --_p: 0; }
+.f-principles__list { margin: 0; padding: 0; list-style: none; }
+.f-principle { display: grid; grid-template-columns: 176px minmax(0, 1fr); align-items: center; gap: var(--ok-s-5); padding: var(--ok-s-5); }
+.f-principle + .f-principle { box-shadow: inset 0 1px 0 var(--ok-line); }
+.f-principle .f-pv { height: 104px; border-radius: var(--ok-r-3); }
+.f-principle__text { display: grid; gap: var(--ok-s-1); min-width: 0; }
+@media (max-width: 519.98px) {
+  .f-principle { grid-template-columns: minmax(0, 1fr); gap: var(--ok-s-3); padding: var(--ok-s-4); }
+  .f-principle .f-pv { height: 96px; }
+}
+/* 卡片上带文字，悬停时只有示意图里的图形在动 */
+@media (hover: hover) {
+  .f-principle:hover .f-pv--radius i:nth-child(1) { transform: translate(-6px, -6px); }
+  .f-principle:hover .f-pv--radius i:nth-child(3) { transform: translate(6px, 6px); }
+  .f-principle:hover .f-pv--flat i:nth-child(1) { transform: translateY(-6px); }
+  .f-principle:hover .f-pv--flat i:nth-child(2) { transform: translateY(-10px); }
+  .f-principle:hover .f-pv--flat i:nth-child(3) { transform: translateY(-14px) scale(1.06); }
+  .f-principle:hover .f-pv--ink i:nth-child(2) { transform: scaleY(1.12); }
+  .f-principle:hover .f-pv--ink i:nth-child(3) { transform: scaleY(1.5); }
+  .f-principle:hover .f-pv--motion i:nth-child(3) { transform: translateX(calc(100cqw - 74px)); }
+}
+
+/* ================================================================ 色彩 */
+/* 品牌色：三个大色块 */
+.f-brand { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px; }
+.f-brand__tile {
+  display: grid; align-content: end; gap: 2px; min-width: 0; height: 152px; padding: 20px; margin: 0; border: 0; text-align: left; cursor: pointer;
+  border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--c); color: var(--f);
+  box-shadow: inset 0 0 0 1px var(--ok-line); touch-action: manipulation;
+  transition: transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy);
+}
+.f-brand__tile:active { transform: scale(.97); transition-duration: var(--ok-dur-1); }
+.f-brand__tile b { font: 700 20px/1.2 var(--ok-font-display); }
+.f-brand__tile span { font: 500 13px/1.4 var(--ok-font-mono); }
+.f-brand__tile em { margin-top: 6px; font: 450 12px/1.4 var(--ok-font); font-style: normal; }
+
+/* 色阶：一排色块，取值相同的并成一块 */
+.f-scale { position: relative; display: flex; min-height: 84px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); }
+.f-scale::after { content: ""; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 1px var(--ok-line); pointer-events: none; }
+.f-scale button {
+  flex: 1 1 0; display: grid; align-content: end; gap: 2px; min-width: 0; height: 84px; padding: 10px 6px 10px 10px; margin: 0; border: 0; text-align: left;
+  background: var(--c); color: var(--f); cursor: pointer; touch-action: manipulation;
+  transition: transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy);
+}
+.f-scale button:first-child { border-start-start-radius: var(--ok-r-3); border-end-start-radius: var(--ok-r-3); corner-shape: var(--ok-corner); }
+.f-scale button:last-child { border-start-end-radius: var(--ok-r-3); border-end-end-radius: var(--ok-r-3); corner-shape: var(--ok-corner); }
+.f-scale button:focus-visible { position: relative; z-index: 1; outline-offset: -4px; outline-color: var(--f); }
+.f-scale button:active { transform: scale(.97); transition-duration: var(--ok-dur-1); }
+.f-scale b { font: 600 12px/1.25 var(--ok-font); overflow-wrap: anywhere; }
+.f-scale span { font: 500 10.5px/1.2 var(--ok-font-mono); white-space: nowrap; overflow: hidden; text-overflow: clip; }
+
+/* 语义表面：一层套一层 */
+.f-surfaces code { display: block; margin-bottom: 14px; font: 500 12px/1.3 var(--ok-font-mono); color: var(--ok-text-2); overflow-wrap: anywhere; }
+.f-surfaces code i { font-style: normal; color: var(--ok-text-3); }
+.f-surfaces__bg { padding: 16px; border-radius: var(--ok-r-5); corner-shape: var(--ok-corner); background: var(--ok-bg); box-shadow: inset 0 0 0 1px var(--ok-line-2); }
+.f-surfaces__surface { padding: 16px; border-radius: calc(28px * var(--ok-rk)); corner-shape: var(--ok-corner); background: var(--ok-surface); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi); }
+.f-surfaces__card { padding: 16px; border-radius: calc(20px * var(--ok-rk)); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi); }
+.f-surfaces__row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(110px, 100%), 1fr)); gap: 12px; }
+.f-surfaces__row > div { display: grid; place-items: center; min-height: 72px; padding: 8px; text-align: center; border-radius: var(--ok-r-1); corner-shape: var(--ok-corner); }
+.f-surfaces__row code { margin: 0; }
+.f-surfaces__row code i { display: block; margin-top: 4px; }
+.f-surfaces__well { background: var(--ok-well); }
+.f-surfaces__raised { background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-surfaces__pop { background: var(--ok-pop); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); }
+
+/* 强调色派生 */
+.f-swatches-ph { display: block; width: 220px; height: 32px; }
+.f-mono-note { font: 500 13px/1.3 var(--ok-font-mono); color: var(--ok-text-2); }
+.f-derived { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr)); gap: 10px; }
+.f-derived span {
+  display: grid; place-items: center; height: 52px; padding: 0 8px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner);
+  font: 600 12px/1 var(--ok-font); white-space: nowrap;
+  transition: background-color var(--ok-dur-4) var(--ok-ease-out), color var(--ok-dur-4) var(--ok-ease-out);
+}
+.f-derived__ring { margin: 4px; height: 44px !important; background: var(--ok-card); color: var(--ok-text); outline: 2px solid var(--ok-accent); outline-offset: 2px; }
+
+/* 状态色 */
+.f-status { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 10px; }
+.f-status__item {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 2px 12px; min-width: 0; padding: 12px 14px; margin: 0; border: 0;
+  border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--s); text-align: left; cursor: pointer; touch-action: manipulation;
+  transition: transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy);
+}
+.f-status__item:active { transform: scale(.97); transition-duration: var(--ok-dur-1); }
+.f-status__item i { grid-row: span 2; width: 28px; height: 28px; border-radius: 50%; background: var(--c); }
+.f-status__item b { font: 600 14px/1.3 var(--ok-font); color: var(--t); }
+.f-status__item b code { margin-left: 4px; font: 500 12px/1 var(--ok-font-mono); color: var(--ok-text-2); }
+.f-status__item span { font: 500 11.5px/1.5 var(--ok-font-mono); color: var(--ok-text-2); overflow-wrap: anywhere; }
+
+/* 半透明的四种用途 */
+.f-alpha { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 16px; }
+.f-alpha figure { display: grid; gap: 10px; align-content: start; margin: 0; min-width: 0; }
+.f-alpha figcaption { display: grid; gap: 2px; font: 450 13px/1.55 var(--ok-font); color: var(--ok-text-2); }
+.f-alpha figcaption b { font: 600 14px/1.4 var(--ok-font); color: var(--ok-text); }
+.f-alpha figcaption code { font: 500 12px/1 var(--ok-font-mono); color: var(--ok-text); }
+.f-alpha__stage {
+  position: relative; display: grid; place-items: center; height: 120px; padding: 12px; overflow: hidden;
+  border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line);
+}
+.f-alpha__list { display: grid; width: 100%; padding: 4px; }
+.f-alpha__list span { padding: 6px 10px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); font: 500 13px/1.4 var(--ok-font); }
+.f-alpha__list .is-hover { background: var(--ok-hover); }
+.f-alpha__lines { display: grid; gap: 12px; width: 100%; }
+.f-alpha__lines i { display: block; height: 32px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-card); }
+.f-alpha__lines i:nth-child(1) { box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi); }
+.f-alpha__lines i:nth-child(2) { background: var(--ok-pop); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); }
+.f-alpha__stage--scrim { padding: 0; }
+.f-alpha__page { position: absolute; inset: 14px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: repeating-linear-gradient(180deg, var(--ok-well) 0 8px, transparent 8px 18px); }
+.f-alpha__scrim { position: absolute; inset: 0; background: var(--ok-scrim); }
+.f-alpha__dialog { position: relative; width: 56%; height: 52%; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-surface); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); }
+
+/* ================================================================ 字体 */
+.f-font { display: grid; gap: 4px; align-content: start; }
+.f-font__sample { display: block; margin-bottom: 10px; font-size: 44px; line-height: 1.2; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; color: var(--ok-text); }
+.f-font__title { margin: 0; }
+.f-font__token { font: 500 12.5px/1.4 var(--ok-font-mono); color: var(--ok-text); }
+.f-font__stack { margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; font-family: var(--ok-font-mono); font-size: 12px; }
+
+.f-type { display: grid; width: 100%; }
+.f-type__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 24px; min-width: 0; padding: 14px 0; }
+.f-type__row + .f-type__row { box-shadow: inset 0 1px 0 var(--ok-line); }
+.f-type__sample { flex: 1 1 260px; min-width: 0; color: var(--ok-text); }
+.f-type__meta { display: grid; justify-items: end; gap: 2px; flex: none; text-align: right; }
+.f-type__meta b { font: 600 13px/1.3 var(--ok-font); color: var(--ok-text); }
+.f-type__meta code { font: 500 12px/1.4 var(--ok-font-mono); color: var(--ok-text-2); }
+@media (max-width: 519.98px) {
+  .f-type__meta { display: flex; flex: 1 1 100%; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; min-width: 0; text-align: left; }
+}
+
+.f-weights { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 16px; }
+.f-weights span { display: grid; gap: 4px; }
+.f-weights b { font-family: var(--ok-font); font-size: 22px; line-height: 1.3; color: var(--ok-text); }
+
+.f-tabular { display: grid; gap: 12px; width: min(420px, 100%); }
+.f-tabular > span { display: grid; gap: 2px; padding: 12px 16px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-tabular b { font: 600 22px/1.3 var(--ok-font); color: var(--ok-text); white-space: nowrap; overflow: hidden; }
+
+/* ================================================================ 形状 */
+/* 圆角刻度：悬停或聚焦时粗线沿轮廓描一遍 */
+.f-radius { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(96px, 100%), 1fr)); gap: 16px 14px; }
+.f-radius > div { display: grid; gap: 10px; min-width: 0; border-radius: var(--ok-r-1); outline: 2px solid transparent; outline-offset: 4px; }
+.f-radius > div:focus-visible { outline-color: var(--ok-accent); }
+.f-radius i { position: relative; display: block; height: 84px; overflow: hidden; }
+.f-radius i::before,
+.f-radius i::after {
+  content: ""; position: absolute; left: 0; top: 0; width: 200%; height: 200%;
+  border-radius: var(--r); corner-shape: var(--ok-corner); pointer-events: none;
+}
+.f-radius .is-full i::before,
+.f-radius .is-full i::after { corner-shape: round; }
+.f-radius i::before { box-shadow: inset 0 0 0 1.5px var(--ok-accent); background: linear-gradient(135deg, var(--ok-accent-tint), var(--ok-card) 70%) no-repeat 0 0 / 50% 50%; }
+@property --f-rd { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.f-radius i::after {
+  box-shadow: inset 0 0 0 3px var(--ok-accent);
+  -webkit-mask: conic-gradient(from 270deg, #000 var(--f-rd), transparent 0); mask: conic-gradient(from 270deg, #000 var(--f-rd), transparent 0);
+  transition: --f-rd var(--ok-dur-4) var(--ok-ease-out);
+}
+.f-radius > div:focus-visible i::after { --f-rd: 90deg; }
+@media (hover: hover) { .f-radius > div:hover i::after { --f-rd: 90deg; } }
+.f-radius p { margin: 0; }
+.f-radius b { display: block; font: 600 13px/1.3 var(--ok-font); color: var(--ok-text); }
+.f-radius span { display: block; font: 500 12px/1.3 var(--ok-font-mono); color: var(--ok-text-2); }
+
+/* 同心圆角演示 */
+.f-nest { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 24px 40px; align-items: center; }
+.f-nest__stage { display: grid; place-items: center; min-width: 0; }
+.f-nest__outer {
+  box-sizing: border-box; width: 100%; max-width: 360px;
+  border-radius: var(--ok-r-6); corner-shape: var(--ok-corner);
+  background: var(--ok-accent-soft); box-shadow: inset 0 0 0 1.5px var(--ok-accent);
+}
+.f-nest__side { min-width: 0; }
+.f-formula { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 16px; }
+.f-formula span { display: grid; gap: 2px; font: 500 13px/1.3 var(--ok-font); color: var(--ok-text-2); }
+.f-formula b { font: 700 40px/1 var(--ok-font-display); color: var(--ok-text); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.f-formula i { font: 500 28px/1.6 var(--ok-font-display); color: var(--ok-text-3); font-style: normal; }
+.f-formula .is-accent b { color: var(--ok-accent-text); }
+
+/* 间距刻度 */
+.f-space { display: grid; gap: 8px; width: 100%; }
+@media (max-width: 519.98px) { .f-space { --f-k: 2; } }   /* 窄屏按 2 倍画，64 那一条也放得下 */
+.f-space div { display: grid; grid-template-columns: 76px minmax(0, 1fr) 32px; align-items: center; gap: 12px; }
+.f-space code { font: 500 12px/1.4 var(--ok-font-mono); color: var(--ok-text-2); }
+.f-space i { display: block; width: var(--w); max-width: 100%; height: 14px; border-radius: var(--ok-r-full); background: var(--ok-accent-fill); transform-origin: 0 50%; animation: f-grow-x var(--ok-spring-dur) var(--ok-spring) both; animation-delay: calc(var(--i) * 40ms * var(--ok-ms)); }
+.f-space span { font: 600 12px/1 var(--ok-font-mono); text-align: right; color: var(--ok-text-2); }
+@keyframes f-grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* 控件高度 */
+.f-heights { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 16px 24px; }
+.f-heights__item {
+  display: inline-flex; align-items: center; min-width: 120px; padding: 0 12px; box-sizing: border-box;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-well); font: 500 13px/1 var(--ok-font);
+}
+
+/* 层级 */
+.f-layers { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: 16px; }
+.f-layer { display: grid; align-content: center; gap: 4px; min-height: 84px; padding: 14px 16px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); }
+.f-layer b { font: 600 14px/1.3 var(--ok-font); color: var(--ok-text); }
+.f-layer span { font: 450 12.5px/1.45 var(--ok-font); color: var(--ok-text-2); }
+.f-layer--well { background: var(--ok-well); }
+.f-layer--card { background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi); }
+.f-layer--raised { background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-layer--hover { background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); }
+.f-layer--pop { background: var(--ok-pop); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); }
+.f-layer--dialog { padding: 8px; background: var(--ok-scrim); }
+.f-layer__card { display: grid; gap: 4px; align-content: center; height: 100%; padding: 8px 12px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-surface); box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); }
+
+/* ================================================================ 动效 */
+.f-motion-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 24px 28px; margin: 0; padding: 0; list-style: none; counter-reset: f-rule; }
+.f-motion-rules li { display: grid; gap: 4px; align-content: start; padding-top: 14px; box-shadow: inset 0 2px 0 var(--ok-text); counter-increment: f-rule; }
+.f-motion-rules li::before { content: "0" counter(f-rule); margin-bottom: 4px; font: 700 12px/1 var(--ok-font-mono); color: var(--ok-accent-text); }
+.f-motion-rules b { font: 600 var(--ok-fs-h4)/1.4 var(--ok-font); color: var(--ok-text); }
+.f-motion-rules span { font: 450 14px/1.65 var(--ok-font); color: var(--ok-text-2); }
+
+.f-curves { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr)); gap: 12px; }
+@media (min-width: 520px) { .f-curves { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
+.f-curve {
+  display: grid; gap: 10px; min-width: 0; padding: 12px; margin: 0; border: 0; text-align: left; cursor: pointer; touch-action: manipulation;
+  border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-card); color: var(--ok-text);
+  box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi);
+  transition: transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy), box-shadow var(--ok-dur-2) var(--ok-ease-out);
+}
+@media (hover: hover) { .f-curve:hover { box-shadow: inset 0 0 0 1px var(--ok-line-2), inset 0 1.5px 0 var(--ok-hi); } }
+.f-curve:active { transform: scale(.98); transition-duration: var(--ok-dur-1), var(--ok-dur-2); }
+.f-curve svg { width: 100%; height: auto; border-radius: calc(4px * var(--ok-rk)); corner-shape: var(--ok-corner); background: var(--ok-well); }
+.f-curve svg .axis { stroke: var(--ok-line-2); stroke-width: 1; stroke-dasharray: 3 3; fill: none; }
+.f-curve svg .line { stroke: var(--ok-text); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.f-curve--spring svg .line { stroke: var(--ok-accent); }
+.f-curve__track { position: relative; height: 16px; border-radius: var(--ok-r-full); background: var(--ok-well); }
+.f-curve__track i { position: absolute; left: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--ok-text); }
+.f-curve--spring .f-curve__track i { background: var(--ok-accent); }
+.f-curve b { display: block; font: 600 13px/1.3 var(--ok-font-mono); overflow-wrap: anywhere; }
+.f-curve > span:last-child span { display: block; margin-top: 2px; font: 450 12px/1.4 var(--ok-font); color: var(--ok-text-2); }
+
+/* 弹簧实验台 */
+.f-pg { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 16px; }
+.f-pg__controls {
+  display: grid; gap: 18px; align-content: start; min-width: 0; padding: 20px;
+  border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi);
+}
+.f-pg__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.f-pg__field { display: grid; gap: 4px; }
+.f-pg__field > span { display: flex; justify-content: space-between; font: 600 13px/1.4 var(--ok-font); color: var(--ok-text); }
+.f-pg__field em { font: 500 12px/1.6 var(--ok-font-mono); font-style: normal; color: var(--ok-text-2); }
+.f-pg__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding-top: 16px; box-shadow: inset 0 1px 0 var(--ok-line); }
+.f-pg__stats dt { font: 500 12px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.f-pg__stats dd { margin: 0; font: 700 20px/1.3 var(--ok-font-display); font-variant-numeric: tabular-nums; color: var(--ok-text); }
+.f-pg__stats small { margin-left: 2px; font: 500 12px/1 var(--ok-font); color: var(--ok-text-2); }
+.f-pg__view { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-content: start; min-width: 0; }
+.f-pg__curve { width: 100%; height: auto; border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-pg__curve .axis { stroke: var(--ok-line-2); stroke-width: 1; stroke-dasharray: 4 4; fill: none; }
+.f-pg__curve .line { stroke: var(--ok-accent); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.f-pg__curve .area { fill: var(--ok-accent-soft); stroke: none; }
+.f-pg__curve text { font: 500 10px var(--ok-font-mono); fill: var(--ok-text-2); }
+.f-pg__stage { display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-pg__track { position: relative; flex: 1; min-width: 0; height: 44px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-well); }
+.f-pg__box { position: absolute; left: 4px; top: 4px; width: 36px; height: 36px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-accent); }
+/* 一行代码：和库的 CodeBlock 一样用凹槽底 */
+.f-pg__code { display: flex; align-items: center; gap: 4px; min-width: 0; padding-right: 6px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-well); }
+.f-pg__code pre { flex: 1; min-width: 0; margin: 0; padding: 12px 14px; font: 500 12px/1.7 var(--ok-font-mono); color: var(--ok-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 六种基本动作 */
+.f-patterns { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 24px 16px; }
+.f-pattern { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.f-pattern__stage {
+  position: relative; display: grid; place-items: center; height: 172px; margin-bottom: 8px; overflow: hidden;
+  border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-surface); box-shadow: inset 0 0 0 1px var(--ok-line), inset 0 1.5px 0 var(--ok-hi);
+}
+.f-pattern__stage > :first-child:not(:only-child) { margin-bottom: 36px; }
+.f-pattern__btn { position: absolute; right: 12px; bottom: 12px; }
+.f-pattern__title, .f-pattern__desc { margin: 0; }
+
+.f-pt-enter { display: grid; place-items: center; height: 64px; }
+.f-pt-enter__card {
+  display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; transform-origin: 50% 100%;
+  border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line);
+  opacity: 0; transform: scale(.8) translateY(12px);
+  transition: opacity var(--ok-dur-2) var(--ok-ease-in), transform var(--ok-dur-2) var(--ok-ease-in);
+}
+.f-pt-enter__card[data-state="open"] { opacity: 1; transform: none; transition: opacity var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-spring-dur) var(--ok-spring); }
+.f-pt-enter__avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--ok-accent-tint); }
+.f-pt-enter__card > span:last-child { display: grid; gap: 8px; }
+.f-pt-enter__card i { display: block; width: 88px; height: 8px; border-radius: var(--ok-r-full); background: var(--ok-fill); }
+.f-pt-enter__card i + i { width: 56px; }
+
+.f-pt-dock { position: relative; isolation: isolate; display: flex; gap: 2px; padding: 5px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-pt-dock button {
+  display: grid; place-items: center; width: 40px; height: 40px; padding: 0; margin: 0; border: 0; cursor: pointer; touch-action: manipulation;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: none; color: var(--ok-text-2);
+  transition: color var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy);
+}
+.f-pt-dock button.is-on { color: var(--ok-accent-text); }
+.f-pt-dock button:active { transform: scale(.86); transition-duration: var(--ok-dur-1); }
+.f-pt-dock__hl {
+  position: absolute; z-index: -1; left: 5px; top: 5px; width: 40px; height: 40px;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-accent-soft);
+  transform: translateX(var(--x, 0)); transition: transform var(--ok-spring-snappy-dur) var(--ok-spring-snappy);
+}
+
+.f-pt-stagger { display: grid; grid-template-columns: repeat(4, 34px); gap: 10px; }
+.f-pt-stagger i { display: block; height: 34px; border-radius: var(--ok-r-1); corner-shape: var(--ok-corner); background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.f-pt-stagger i:nth-child(3n + 1) { background: var(--ok-accent); box-shadow: none; }
+
+.f-pt-flip { display: grid; grid-template-columns: repeat(3, 44px); gap: 10px; }
+.f-pt-flip i { display: grid; place-items: center; height: 44px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-raised); box-shadow: inset 0 0 0 1px var(--ok-line); font: 700 14px/1 var(--ok-font); font-style: normal; color: var(--ok-text); }
+.f-pt-flip i.is-accent { background: var(--ok-accent); box-shadow: none; color: var(--ok-on-accent); }
+
+.f-pt-draw { width: 168px; fill: none; stroke: var(--ok-text); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+.f-pt-draw .is-accent { stroke: var(--ok-accent); stroke-width: 5.5; }
+.f-pt-draw path { stroke-dasharray: 1 1.1; }
+.f-pt-draw.is-playing path { animation: f-draw var(--ok-dur-5) var(--ok-ease-out) both; }
+.f-pt-draw.is-playing .is-accent { animation-duration: var(--ok-dur-6); animation-delay: calc(260ms * var(--ok-ms)); }
+@keyframes f-draw { from { stroke-dashoffset: 1.05; } to { stroke-dashoffset: 0; } }
+
+/* 从触发点进场：三个按钮分在两端和中间 */
+.f-origin { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+
+.ok-card.f-hover-card { width: auto; }
+.f-motion-table table { min-width: 640px; }
+
+/* ================================================================ 令牌索引 */
+.f-token-list { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; white-space: normal; }
+.f-token-note { display: block; min-width: 0; white-space: normal; }
+/* 表格不堆叠时给这两列定宽，免得一行代码把表格撑出横向滚动 */
+@media (min-width: 520px) { .f-token-list { width: 300px; } .f-token-note { width: 220px; } }

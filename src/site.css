@@ -1,0 +1,80 @@
+html, body { margin: 0; }
+body { background: var(--ok-bg); color: var(--ok-text); font: 450 15px/1.6 var(--ok-font); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+
+/* —— 顶栏（首页和文档页共用） —— */
+.site-brand { display: inline-flex; align-items: center; flex: none; color: var(--ok-text); text-decoration: none; border-radius: var(--ok-r-1); }
+
+.site-top { display: flex; gap: 4px; margin-left: 8px; margin-right: auto; }
+.site-top a { padding: 8px 12px; border-radius: var(--ok-r-full); corner-shape: round; font: 500 14px/1 var(--ok-font); color: var(--ok-text-2); text-decoration: none; white-space: nowrap; }
+.site-top a[aria-current="page"] { color: var(--ok-text); font-weight: 600; background: var(--ok-fill); }
+@media (hover: hover) { .site-top a:hover { color: var(--ok-text); } }
+.site-controls { display: flex; align-items: center; gap: 12px; flex: none; }
+.site-theme { flex: none; }
+/* 两个图标都在，按 <html data-theme> 显示一个（预渲染的 HTML 在注水前就对） */
+:root:not([data-theme="dark"]) .site-theme__sun, :root[data-theme="dark"] .site-theme__moon { display: none; }
+/* 字标：很窄的屏幕上只留图形 */
+@media (max-width: 419.98px) { .site-brand .ok-logo__word { display: none; } }
+.site-actions { display: flex; align-items: center; gap: 0; flex: none; }
+
+/* 强调色圆点：每个圆点自己带 data-accent，于是 var(--ok-accent) 取到的就是那一种颜色 */
+.site-accents { display: flex; align-items: center; gap: 6px; }
+.site-accent {
+  flex: none; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: var(--ok-accent); cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--ok-line-2); touch-action: manipulation;
+  transition: box-shadow var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-spring-dur) var(--ok-spring);
+}
+/* 选中圈跟着 <html data-accent> 走，不看 aria-checked：预渲染的 HTML 在注水前就圈对了 */
+:root[data-accent="pink"] .site-accent[data-accent="pink"],
+:root[data-accent="orange"] .site-accent[data-accent="orange"],
+:root[data-accent="amber"] .site-accent[data-accent="amber"],
+:root[data-accent="blue"] .site-accent[data-accent="blue"],
+:root[data-accent="violet"] .site-accent[data-accent="violet"],
+:root[data-accent="custom"] .site-accent--custom { box-shadow: inset 0 0 0 2px var(--ok-bg), 0 0 0 1.5px var(--ok-text); }
+.site-accent:active { transform: scale(.9); }
+/* 预设圆点和自定义按钮排成一行，间距同圆点之间 */
+.site-accent-row { display: flex; align-items: center; gap: 6px; }
+.site-accent-row--wrap { flex-wrap: wrap; }
+/* 自定义强调色：彩色圆点。选中时外圈同预设，中间露出当前颜色 */
+.site-accent--custom {
+  position: relative;
+  background: conic-gradient(from 200deg, #FF5F7E, #FF9F43, #FFD43B, #69DB7C, #4DABF7, #9775FA, #F06595, #FF5F7E);
+}
+.site-accent--custom::before {
+  content: ""; position: absolute; inset: 6px; border-radius: 50%; corner-shape: round;
+  background: var(--ok-accent); opacity: 0; transform: scale(.4);
+  transition: opacity var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-spring-dur) var(--ok-spring);
+}
+:root[data-accent="custom"] .site-accent--custom::before { opacity: 1; transform: none; box-shadow: 0 0 0 1.5px var(--ok-bg); }
+/* 窄屏浮层里就地展开的取色器：另起一行 */
+.site-accent-custom { flex-basis: 100%; margin-top: 12px; }
+/* 触屏：圆点不变大，点按区域扩到 44 */
+@media (pointer: coarse) { .site-accent { position: relative; } .site-accent::after { content: ""; position: absolute; inset: -11px -4px; } }
+
+@media (max-width: 767.98px) { .site-top { margin-left: 0; } .site-top a { padding: 8px; } }
+
+/* —— 文档页 —— */
+.site-main { width: 100%; max-width: 980px; margin: 0 auto; padding: 32px clamp(16px, 4vw, 40px) 96px; min-width: 0; }
+.site-404 { padding: 80px 0; text-align: center; }
+
+/* —— 示例应用整页：左下角回首页 —— */
+:root[data-embed] .site-back { display: none; }
+.site-back { position: fixed; z-index: 70; left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom)); text-decoration: none; background: var(--ok-pop); box-shadow: inset 0 0 0 1px var(--ok-line-2); }
+
+/* 首页、组件页的标题栏始终吸顶：铺满整宽、不透明底色，内容在 1440 以内居中；离开顶部后底边出现一条发丝线
+   （文档页的标题栏在 AppShell 里，正文在自己的滚动区里滚，标题栏本来就不动） */
+.site-sticky {
+  position: sticky; top: 0; z-index: 40;
+  max-width: none !important; background: var(--ok-bg);
+  padding-left: max(var(--_pad, 16px), calc((100% - var(--_max, 1440px)) / 2 + var(--_pad, 16px))) !important;
+  padding-right: max(var(--_pad, 16px), calc((100% - var(--_max, 1440px)) / 2 + var(--_pad, 16px))) !important;
+  transition: box-shadow var(--ok-dur-2) var(--ok-ease-out);
+}
+.site-sticky[data-scrolled] { box-shadow: inset 0 -1px 0 var(--ok-line); }
+.home .site-sticky { --_pad: var(--home-pad); --_max: var(--home-max); }
+.gal .site-sticky { --_pad: var(--gal-pad); --_max: var(--gal-max); }
+/* 窄屏：强调色收成一个按钮，点开在浮层里选；宽屏直接摆圆点。两种都渲染，这里只显示一种 */
+@media (min-width: 768px) { .site-controls .site-accent-btn { display: none; } }
+@media (max-width: 767.98px) { .site-accents--wide { display: none; } }
+.site-accent-btn .site-accent--swatch { width: 18px; height: 18px; pointer-events: none; box-shadow: inset 0 0 0 1px var(--ok-line-2); }
+.site-accent-pop { padding: 12px 14px; }

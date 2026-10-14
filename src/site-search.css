@@ -1,0 +1,3 @@
+/* 顶栏里的搜索入口是一个普通的图标按钮（ok-btn--ghost ok-btn--icon），这里只剩命令面板底部的按键说明 */
+.site-search__foot { display: inline-flex; align-items: center; gap: 4px; font: 450 12px/1 var(--ok-font); color: var(--ok-text-3); }
+.site-search__foot kbd + kbd { margin-left: -1px; }

@@ -1,0 +1,161 @@
+/* 数据分析示例：只写布局和图表。颜色全部来自 --ok-* 令牌，不写阴影。 */
+
+.an-shell {
+  /* 图表配色：主序列用强调色的可读色阶，对比序列用柔和灰 */
+  --an-series: var(--ok-accent-text);
+  --an-series-soft: var(--ok-accent-soft);
+  --an-compare: var(--ok-text-3);
+}
+
+/* 主区自己滚动，但库里没有把它设成定位容器：里面 position: absolute 的 .ok-sr（表格、分页、指标卡都有）
+   会以整个骨架为参照、留在几千像素以下，把 overflow: hidden 的骨架撑成可滚动——scrollIntoView 或聚焦时整页会被顶上去、顶栏消失。
+   这里就地补上。 */
+.an-shell :is(.ok-shell__main, .ok-shell__sidebar) { position: relative; }
+
+/* —— 筛选面板停靠时，整个骨架向左让出位置（面板宽 320 + 一道缝） —— */
+@media (min-width: 1024px) {
+  .an-shell[data-filters] { padding-right: calc(320px + 2 * var(--_gap)); }
+}
+
+/* —— 顶栏 —— */
+.an-brand { display: inline-flex; align-items: center; gap: var(--ok-s-2); min-width: 0; font: 700 16px/1 var(--ok-font-display); letter-spacing: -.01em; color: var(--ok-text); white-space: nowrap; }
+.an-brand__mark { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-accent); color: var(--ok-on-accent); }
+.an-brand__mark .ok-icon { width: 18px; height: 18px; }
+.an-workspace { display: none; font: 500 13px/1 var(--ok-font); color: var(--ok-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 520px) { .an-workspace { display: block; } }
+.an-header-end { display: flex; align-items: center; gap: var(--ok-s-1); margin-left: auto; flex: none; }
+
+/* —— 侧栏 —— */
+.an-side { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; gap: var(--ok-s-4); }
+/* 用量卡贴着侧栏卡片的底边：到左、右、下三边都是侧栏的内边距 20，圆角取侧栏给的同心值（32 − 20 = 12）；
+   底色用白色系卡片色（比原来的凹槽浅），按描边规则加 1px 发丝线 */
+.an-side__usage {
+  display: grid; gap: var(--ok-s-2); margin-top: auto; padding: var(--ok-s-3);
+  border-radius: var(--ok-r-nested, var(--ok-r-2)); corner-shape: var(--ok-corner);
+  background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line);
+  font: 500 13px/1.4 var(--ok-font); color: var(--ok-text-2);
+}
+.an-side__usage b { font-weight: 600; color: var(--ok-text); }
+.an-side__usage-row { display: flex; justify-content: space-between; gap: var(--ok-s-2); }
+
+/* —— 页面 —— */
+.an-page { padding-bottom: 72px; }   /* 窄屏时左下角的返回按钮浮在主区上，滚到底要能露出最后一行 */
+.an-range { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ok-s-2); min-width: 0; }
+.an-range > * { min-width: 0; }
+.an-range__preset { width: 132px; flex: none; }
+.an-range__picker { flex: none; white-space: nowrap; }
+/* Select 的触发框自带 min-width: 168px，放进更窄的容器会溢出，这里放开 */
+.an-range__preset .ok-select__trigger { min-width: 0; width: 100%; }
+@media (max-width: 519.98px) {
+  .an-header-actions { width: 100%; }
+  .an-range, .an-range__picker { flex: 1 1 100%; }
+  .an-range__preset { flex: 1 1 100%; width: auto; }
+  .an-compare-seg { flex: 1 1 100%; }
+}
+
+/* —— 图表卡片 —— */
+.an-chart-card, .an-card { display: flex; flex-direction: column; gap: var(--ok-s-4); height: 100%; box-sizing: border-box; }
+.an-chart-card .ok-card__header { flex-wrap: wrap; }
+.an-chart { position: relative; min-width: 0; border-radius: var(--ok-r-2); touch-action: pan-y; }
+.an-chart svg { display: block; overflow: visible; }
+.an-chart text { font: 500 12px/1 var(--ok-font); font-variant-numeric: tabular-nums; fill: var(--ok-text-2); }
+
+.an-grid { stroke: var(--ok-line); stroke-width: 1; fill: none; }
+.an-axis { stroke: var(--ok-line-2); stroke-width: 1; fill: none; }
+.an-series-line { stroke: var(--an-series); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; fill: none; }
+.an-series-area { fill: var(--an-series-soft); stroke: none; }
+.an-compare-line { stroke: var(--an-compare); stroke-width: 1.5; stroke-dasharray: 4 4; stroke-linecap: round; fill: none; }
+.an-cursor { stroke: var(--ok-line-2); stroke-width: 1; fill: none; }
+.an-series-dot { fill: var(--an-series); stroke: var(--ok-card); stroke-width: 2; }
+.an-compare-dot { fill: var(--ok-card); stroke: var(--an-compare); stroke-width: 2; }
+.an-bar-track { fill: var(--ok-fill); }
+.an-series-bar { fill: var(--ok-accent); transition: width var(--ok-dur-4) var(--ok-ease-out); }
+.an-compare-tick { stroke: var(--ok-text); stroke-width: 2; stroke-linecap: round; fill: none; }
+.an-row-hl { fill: var(--ok-hover); }
+.an-chart .an-bar-label { font-size: 13px; fill: var(--ok-text); }
+.an-chart .an-bar-value { font-size: 13px; font-weight: 600; fill: var(--ok-text); }
+
+.an-legend { display: flex; flex-wrap: wrap; gap: var(--ok-s-1) var(--ok-s-4); font: 500 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.an-legend__item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.an-legend__mark { width: 20px; height: 12px; flex: none; overflow: visible; }
+
+/* 数据提示：浮起表面 + 浮层描边，不用阴影 */
+.an-tip {
+  position: absolute; z-index: 2; display: grid; gap: 4px; min-width: 148px; max-width: 240px; padding: var(--ok-s-3);
+  border: 1px solid var(--ok-line-2); border-radius: var(--ok-r-3); corner-shape: var(--ok-corner);
+  background: var(--ok-raised); color: var(--ok-text-2); font: 500 13px/1.4 var(--ok-font); pointer-events: none;
+}
+.an-tip__title { font-weight: 600; color: var(--ok-text); }
+.an-tip__row { display: flex; align-items: center; justify-content: space-between; gap: var(--ok-s-4); }
+.an-tip__row b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ok-text); }
+.an-tip__delta { font-weight: 600; font-variant-numeric: tabular-nums; }
+.an-tip__delta[data-dir="up"] { color: var(--ok-success-text); }
+.an-tip__delta[data-dir="down"] { color: var(--ok-danger-text); }
+
+/* —— 留存热力表 —— */
+.an-heat { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; font: 500 13px/1 var(--ok-font); font-variant-numeric: tabular-nums; color: var(--ok-text); }
+.an-heat th { padding: 0 2px; height: 28px; font-weight: 500; color: var(--ok-text-2); text-align: center; white-space: nowrap; }
+.an-heat th:first-child { width: 52px; text-align: start; }
+.an-heat tbody th { font-weight: 600; color: var(--ok-text); }
+.an-heat__size { width: 56px; text-align: end; color: var(--ok-text-2); padding-inline-end: var(--ok-s-2); }
+.an-heat th.an-heat__size { text-align: end; }
+.an-heat__cell {
+  height: 36px; text-align: center; border-radius: var(--ok-r-1); corner-shape: var(--ok-corner);
+  background: color-mix(in srgb, var(--ok-accent) calc(6% + 34% * var(--an-heat, 0)), transparent);
+}
+.an-heat__cell[data-empty] { background: var(--ok-well); }
+.an-heat__pct { font-size: 11px; color: var(--ok-text-2); }
+@media (max-width: 519.98px) {
+  .an-heat { border-spacing: 2px; font-size: 12px; }
+  .an-heat__size { display: none; }
+  .an-heat th:first-child { width: 40px; }
+  .an-heat__pct { display: none; }
+}
+
+/* —— 目标 —— */
+.an-goal-hero { display: flex; align-items: center; gap: var(--ok-s-4); min-width: 0; }
+.an-goal-hero__text { display: grid; gap: 2px; min-width: 0; }
+.an-goal-hero__value { font: 700 22px/1.2 var(--ok-font-display); letter-spacing: -.015em; font-variant-numeric: tabular-nums; color: var(--ok-text); }
+.an-goal { display: grid; gap: 6px; font: 500 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.an-goal__row { display: flex; justify-content: space-between; gap: var(--ok-s-3); }
+.an-goal__row b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ok-text); }
+.an-muted { font: 500 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+
+/* —— 表格里的小东西 —— */
+.an-link { appearance: none; margin: 0; padding: 0; border: 0; background: none; font: inherit; font-weight: 600; color: var(--ok-text); text-align: inherit; cursor: pointer; border-radius: var(--ok-r-1); text-decoration: underline; text-decoration-color: var(--ok-line-2); text-underline-offset: 3px; }
+@media (hover: hover) { .an-link:hover { text-decoration-color: currentColor; } }
+.an-cell-2 { display: block; font: 450 13px/1.4 var(--ok-font); color: var(--ok-text-2); }
+.an-mono { font: 500 13px/1.5 var(--ok-font-mono); }
+.an-health { display: inline-flex; align-items: center; gap: var(--ok-s-2); }
+.an-health .ok-progress { width: 48px; }
+.an-table-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ok-s-3); }
+.an-skel-table { display: grid; gap: var(--ok-s-4); padding: var(--ok-s-5); border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-card); border: 1px solid var(--ok-line); }
+
+/* —— 客户页 —— */
+.an-search { width: 240px; max-width: 100%; }
+@media (max-width: 519.98px) { .an-search { flex: 1 1 100%; width: auto; } }
+.an-bulk { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ok-s-2) var(--ok-s-3); padding: var(--ok-s-2) var(--ok-s-2) var(--ok-s-2) var(--ok-s-4); border-radius: var(--ok-r-4); corner-shape: var(--ok-corner); background: var(--ok-well); font: 600 14px/1.4 var(--ok-font); color: var(--ok-text); }
+.an-bulk__count { margin-inline-end: auto; }
+.an-filter { display: grid; gap: var(--ok-s-5); }
+.an-drawer-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ok-s-3); }
+.an-drawer-stats .ok-stat__value { font-size: 20px; }
+
+/* 库的问题（display/table.css）：`.ok-table .ok-table__select { width: 1px }` 的优先级高于卡片式布局里的 width: auto，
+   窄屏下“选择”那一格被压成 1px 宽（标签竖排），表头的全选框压在第一个排序按钮上。这里就地改回来。 */
+@media (max-width: 519.98px) {
+  .an-shell .ok-table--stack .ok-table__select { width: auto; }
+  .an-shell .ok-table--stack tbody .ok-table__select { padding-right: var(--_inset); }
+}
+
+/* 侧栏在“图标窄条 ↔ 完整”之间过渡时：用量卡保持完整宽度（不随侧栏变窄而重排），由侧栏卡片裁切逐渐露出；
+   窄条时淡出并移出无障碍树，展开时立即开始淡入 */
+.an-side__usage {
+  flex: none; width: calc(var(--ok-shell-sidebar-w, 260px) - 2 * var(--ok-shell-card-pad, var(--ok-s-5)));
+  transition: opacity var(--ok-dur-3) var(--ok-ease-out), visibility 0s;
+}
+.an-side__usage[data-hidden] {
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--ok-dur-1) var(--ok-ease-in), visibility 0s linear var(--ok-dur-1);
+}
+/* 抽屉形态（窄屏）里宽度跟抽屉走 */
+.ok-float__card .an-side__usage { width: auto; }

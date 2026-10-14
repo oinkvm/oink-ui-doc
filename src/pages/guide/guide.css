@@ -1,0 +1,93 @@
+/* 指南页与基础 / 布局组件页共用的小样式。类名前缀 g-，只用令牌，不写阴影（内描边用 inset 发丝线，和库一致）。 */
+
+/* —— 正文 —— */
+.g-prose { display: grid; gap: 12px; max-width: 72ch; color: var(--ok-text-2); font: 450 15px/1.7 var(--ok-font); }
+.g-prose p, .g-prose ul, .g-prose ol { margin: 0; }
+.g-prose ul, .g-prose ol { padding-left: 20px; display: grid; gap: 6px; }
+.g-prose strong { color: var(--ok-text); font-weight: 600; }
+.g-prose a, .g-link { color: var(--ok-accent-text); text-underline-offset: 3px; border-radius: 4px; }
+
+/* —— 首页 —— */
+.g-hero { display: grid; gap: 20px; justify-items: start; padding: 24px 0 8px; min-width: 0; }
+.g-hero__brand { display: inline-flex; align-items: center; gap: 12px; font: 700 20px/1 var(--ok-font-display); letter-spacing: -.01em; }
+.g-hero__title { margin: 0; max-width: 16em; }
+.g-hero__title span { display: inline-block; white-space: nowrap; }   /* 只在顿号后面换行 */
+.g-hero__lead { max-width: 60ch; margin: 0; }
+.g-hero__words { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.g-feature__icon {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner);
+  background: var(--ok-fill); color: var(--ok-text);
+}
+
+/* —— 示意块 —— */
+.g-ph {
+  box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 48px; padding: 8px 12px; text-align: center;
+  border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-card); color: var(--ok-text-2);
+  box-shadow: inset 0 0 0 1px var(--ok-line); font: 500 13px/1.4 var(--ok-font);
+}
+.g-ph--fill { background: var(--ok-fill); box-shadow: none; }
+.g-ph--accent { background: var(--ok-accent-tint); color: var(--ok-text); box-shadow: none; }
+
+/* 演示框：放 contained 的 AppShell / 悬浮卡片 / 分栏 */
+.g-frame {
+  position: relative; box-sizing: border-box; width: 100%; min-width: 0; overflow: hidden;
+  border-radius: var(--ok-r-6); corner-shape: var(--ok-corner); background: var(--ok-bg); box-shadow: inset 0 0 0 1px var(--ok-line);   /* 里面的悬浮卡片 / 侧栏卡片 R32 离框 12：32 + 12 = 44 */
+}
+/* 手机尺寸演示框 */
+.g-phone {
+  position: relative; box-sizing: border-box; width: 340px; max-width: 100%; height: 560px; overflow: hidden;
+  border-radius: var(--ok-r-5); corner-shape: var(--ok-corner); background: var(--ok-bg); box-shadow: inset 0 0 0 1px var(--ok-line-2);
+}
+.g-phone__scroll { height: 100%; box-sizing: border-box; padding: 20px 16px 116px; }
+
+/* —— 色块与尺寸样张（色彩、形状页） —— */
+.g-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(148px, 100%), 1fr)); gap: 16px 12px; width: 100%; }
+.g-swatch { display: grid; gap: 6px; min-width: 0; }
+.g-swatch__chip { height: 56px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.g-swatch__name, .g-swatch__value { font: 500 12px/1.4 var(--ok-font-mono); overflow-wrap: anywhere; }
+.g-swatch__name { color: var(--ok-text); }
+.g-swatch__value { color: var(--ok-text-2); }
+
+.g-height { display: inline-grid; place-items: center; padding: 0 16px; border-radius: var(--ok-r-full); background: var(--ok-fill); font: 600 13px/1 var(--ok-font-mono); }
+
+/* 试播轨道：整行是一个按钮 */
+.g-play {
+  display: grid; grid-template-columns: minmax(0, 200px) minmax(0, 1fr); align-items: center; gap: 16px; width: 100%; box-sizing: border-box;
+  min-height: var(--ok-h-lg); padding: 8px 12px; margin: 0; border: 0; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner);
+  background: none; color: inherit; text-align: left; cursor: pointer; touch-action: manipulation;
+}
+@media (hover: hover) { .g-play:hover { background: var(--ok-hover); } }
+.g-play__meta { display: grid; gap: 2px; min-width: 0; font: 500 12px/1.4 var(--ok-font-mono); color: var(--ok-text-2); overflow-wrap: anywhere; }
+.g-play__meta b { font-weight: 600; color: var(--ok-text); }
+.g-play__track { position: relative; height: 24px; border-radius: var(--ok-r-full); background: var(--ok-well); min-width: 0; }
+.g-play__dot { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ok-text); }
+@media (max-width: 519px) { .g-play { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
+
+/* —— 图标一览 —— */
+.g-icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(112px, 100%), 1fr)); gap: 8px; width: 100%; }
+.g-icon-btn {
+  display: grid; justify-items: center; gap: 8px; min-width: 0; padding: 16px 8px 12px; margin: 0; border: 0; cursor: pointer; touch-action: manipulation;
+  border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-card); color: var(--ok-text);
+  box-shadow: inset 0 0 0 1px var(--ok-line); font: 500 12px/1.3 var(--ok-font-mono);
+  transition: box-shadow var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-dur-1) var(--ok-ease-out);
+}
+.g-icon-btn span { max-width: 100%; overflow-wrap: anywhere; color: var(--ok-text-2); }
+@media (hover: hover) { .g-icon-btn:hover { box-shadow: inset 0 0 0 1px var(--ok-line-2); } }
+.g-icon-btn:active { transform: scale(.97); }
+
+/* —— 动效演示 —— */
+.g-stage { position: relative; width: 100%; min-width: 0; height: 64px; border-radius: var(--ok-r-full); background: var(--ok-well); }
+.g-ball { position: absolute; top: 12px; left: 12px; width: 40px; height: 40px; border-radius: 50%; background: var(--ok-accent); }
+.g-flip { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.g-flip li { display: grid; place-items: center; height: 56px; border-radius: var(--ok-r-2); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line); font: 600 15px/1 var(--ok-font-mono); }
+.g-presence {
+  padding: 12px 16px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line-2);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity var(--ok-dur-2) var(--ok-ease-in), transform var(--ok-dur-2) var(--ok-ease-in);
+}
+.g-presence[data-state="open"] { opacity: 1; transform: none; transition: opacity var(--ok-dur-2) var(--ok-ease-out), transform var(--ok-spring-dur) var(--ok-spring); }
+
+/* —— 布局演示里的小东西 —— */
+.g-fill { width: 100%; min-width: 0; }
+.g-scrollbox { height: 220px; border-radius: var(--ok-r-3); corner-shape: var(--ok-corner); background: var(--ok-card); box-shadow: inset 0 0 0 1px var(--ok-line); }
+.g-bp { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }

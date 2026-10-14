@@ -1,0 +1,12 @@
+# 组件库每次发版（main 上的每个改动都会发一个补丁版本），这里每天检查一次，开一个升级 oink-ui 的 PR；
+# PR 合并到 main 后由 deploy.yml 部署
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    allow:
+      - dependency-name: oink-ui
+    commit-message:
+      prefix: deps

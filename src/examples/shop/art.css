@@ -1,0 +1,18 @@
+/* 商品插画（ProductArt）。单独成文件、由 art.tsx 引入：首页也用这些插画，不能依赖电商示例的样式表 */
+.shop-art {
+  --art: var(--ok-text-3);
+  display: grid; width: 100%; height: 100%;
+  background: color-mix(in srgb, var(--art) 18%, var(--ok-well-2));
+}
+.shop-art svg { display: block; width: 100%; height: 100%; }
+.shop-art :is(.a, .b, .c, .w) { stroke: color-mix(in srgb, var(--ok-ink) 12%, transparent); stroke-width: .75; }
+.shop-art .a { fill: var(--art); }
+.shop-art .b { fill: color-mix(in srgb, var(--art) 46%, var(--ok-paper)); }
+.shop-art .c { fill: color-mix(in srgb, var(--art) 58%, var(--ok-ink)); }
+.shop-art .w { fill: var(--ok-paper); }
+.shop-art :is(.sa, .sb, .sc) { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.shop-art .sa { stroke: var(--art); }
+.shop-art .sb { stroke: color-mix(in srgb, var(--art) 46%, var(--ok-paper)); }
+.shop-art .sc { stroke: color-mix(in srgb, var(--art) 58%, var(--ok-ink)); }
+.shop-art .glow { fill: color-mix(in srgb, var(--ok-warning) 26%, transparent); }
+.shop-art .spot { fill: color-mix(in srgb, var(--art) 16%, transparent); }

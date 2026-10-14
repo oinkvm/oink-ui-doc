@@ -1,0 +1,4 @@
+/* Panel 文档页：演示框是面板的 container，需要 position: relative */
+.overlay-panel-box { position: relative; min-height: 340px; padding: 24px; overflow: hidden; }
+.overlay-panel-box--framed { min-height: 420px; border-radius: var(--ok-r-6); corner-shape: var(--ok-corner); background: var(--ok-well); }
+@media (max-width: 519px) { .overlay-panel-box { padding: 16px; min-height: 420px; } }

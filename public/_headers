@@ -1,0 +1,8 @@
+# 文件名带内容哈希的资源：一年强缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML：每次都回源校验（Cloudflare Pages 默认如此，这里写明）
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
