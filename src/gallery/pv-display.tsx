@@ -377,10 +377,16 @@ export function EmptyStatePreview() {
  * Toast：和真的 Toaster 一致——停在右上，新的一条从上方落下、压在最上面，旧的往下让；
  * 停一会儿后从最早的那条开始往右滑走，再从头来。减弱动效时停在三条都在的那一帧
  */
+/* 和 Toaster 同一套描线图标（每一笔 pathLength = 1，进场时依次画出来） */
+const TOAST_GLYPH = {
+  success: <path pathLength={1} d="M5 10.5l3.2 3.2L15 6.5" />,
+  info: <><path pathLength={1} d="M10 9v5.5" /><path pathLength={1} d="M10 5.8v.1" /></>,
+  default: <path pathLength={1} d="M4 4.5c0 6.500 4.500 11 9 11 2.800 0 4.500-2 4.500-4.200S15.700 7.500 13.500 7.500c-2 0-3.400 1.400-3.600 3.200" />,
+};
 const TOASTS = [
-  { tone: 'success', icon: 'check', zh: '已保存修改', en: 'Changes saved' },
-  { tone: 'info', icon: 'link', zh: '链接已复制', en: 'Link copied' },
-  { tone: 'accent', icon: 'send', zh: '消息已发送', en: 'Message sent' },
+  { tone: 'success', zh: '已保存修改', en: 'Changes saved' },
+  { tone: 'info', zh: '有新版本可用', en: 'Update available' },
+  { tone: 'default', zh: '消息已发送', en: 'Message sent' },
 ] as const;
 export function ToastPreview() {
   const t = useT();
@@ -395,7 +401,7 @@ export function ToastPreview() {
         const state = s === 4 ? 'leave' : shown ? 'in' : 'out';
         return (
           <div key={it.en} className="pv-toast" data-state={state} data-tone={it.tone} style={{ '--slot': slot, '--age': i } as CSSProperties}>
-            <span className="pv-toast__icon"><Icon name={it.icon} /></span>
+            <span className="pv-toast__icon"><svg className="pv-toast__glyph" viewBox="0 0 20 20" aria-hidden="true">{TOAST_GLYPH[it.tone]}</svg></span>
             <span className="pv-toast__title">{t(it.zh, it.en)}</span>
             <Icon name="x" className="pv-toast__close" />
           </div>

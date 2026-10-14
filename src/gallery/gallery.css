@@ -273,7 +273,14 @@
 }
 .pv-toast[data-tone="success"] .pv-toast__icon { --_c: var(--ok-success-text); --_s: var(--ok-success-soft); }
 .pv-toast[data-tone="info"] .pv-toast__icon { --_c: var(--ok-info-text); --_s: var(--ok-info-soft); }
-.pv-toast__icon .ok-icon { width: 14px; height: 14px; stroke-width: 2.2; }
+/* 图标的动效和 Toaster 一样：圆底弹出，笔画随后依次画出来。只在进场（data-state="in"）时播放，每轮重新开始 */
+.pv-toast__glyph { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.pv-toast__glyph path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.pv-toast[data-state="in"] .pv-toast__icon { animation: ok-pop var(--ok-spring-bouncy-dur) var(--ok-spring-bouncy) calc(120ms * var(--ok-ms)) both; }
+.pv-toast[data-state="in"] .pv-toast__glyph path { animation: ok-draw var(--ok-dur-4) var(--ok-ease-out) calc(260ms * var(--ok-ms)) forwards; }
+.pv-toast[data-state="in"] .pv-toast__glyph path + path { animation-delay: calc(360ms * var(--ok-ms)); }
+/* 退场时笔画保持画好的样子 */
+.pv-toast[data-state="leave"] .pv-toast__glyph path { stroke-dashoffset: 0; }
 .pv-toast__title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 12.5px/1.2 var(--ok-font); color: var(--ok-text); }
 .pv-toast__close { flex: none; width: 14px; height: 14px; color: var(--ok-text-3); }
 
