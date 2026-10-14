@@ -43,6 +43,8 @@
 .an-range { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ok-s-2); min-width: 0; }
 .an-range > * { min-width: 0; }
 .an-range__preset { width: 132px; flex: none; }
+/* 英文的“Last 90 days”比中文长，132 放不下 */
+@media (min-width: 520px) { :root[lang="en"] .an-range__preset { width: 156px; } }
 .an-range__picker { flex: none; white-space: nowrap; }
 /* Select 的触发框自带 min-width: 168px，放进更窄的容器会溢出，这里放开 */
 .an-range__preset .ok-select__trigger { min-width: 0; width: 100%; }
